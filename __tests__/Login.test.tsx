@@ -1,8 +1,12 @@
 import 'react-native';
 import React from 'react';
-import App from '../App';
 import Login from '../src/screens/login.tsx';
-import {render, cleanup, fireEvent, waitFor, screen, userEvent} from '@testing-library/react-native';
+import {
+  render,
+  cleanup,
+  fireEvent,
+  screen,
+} from '@testing-library/react-native';
 
 // Note: import explicitly to use the types shipped with jest.
 import {it, expect, afterEach, describe, jest} from '@jest/globals';
@@ -48,6 +52,15 @@ describe('Login', () => {
     const {getByTestId, getAllByTestId} = render(<Login />);
     fireEvent.changeText(getByTestId('PasswordInput'), '1234');
     expect(getAllByTestId('PasswordInputError').length).toBe(1);
+  });
+  it('Button should navigate user to signup screen', () => {
+    const navigation = {
+      navigate: jest.fn(),
+    };
+    render(<Login navigation={navigation} />);
+    expect(screen.getByText('Login')).toBeOnTheScreen();
+    fireEvent.press(screen.getByTestId('SignupBtn'));
+    expect(navigation.navigate).toHaveBeenCalledWith('Sign_up');
   });
 
   // Button enabled/disabled state tests

@@ -6,7 +6,7 @@ import {StackParamList} from '../types/navigation.ts';
 // @ts-ignore
 import type {StackScreenProps} from '@react-navigation/native-stack';
 import {Errors} from '../types/registrationErros.ts';
-import {signupWithEmailAndPassword} from '../helpers/signup.ts';
+import {signupWithEmailAndPassword} from '../helpers/auth.ts';
 
 type Props = StackScreenProps<StackParamList, 'Sign_up'>;
 
@@ -99,7 +99,7 @@ const SignUp = (props: Props): React.JSX.Element => {
           style={styles.loginBtn}
           onPress={() => {
             console.log('BTN_WAS_PRESSED');
-            // signupWithEmailAndPassword(email, password);
+            signupWithEmailAndPassword(email, password, setErrors);
           }}
           disabled={isButtonDisabled}>
           Sign Up

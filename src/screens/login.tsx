@@ -6,6 +6,8 @@ import validator from 'validator';
 import type {StackScreenProps} from '@react-navigation/native-stack';
 import {StackParamList} from '../types/navigation.ts';
 import {Errors} from '../types/registrationErros.ts';
+import { loginWithEmailAndPassword } from "../helpers/auth.ts";
+import {useNavigation} from '@react-navigation/core';
 
 type Props = StackScreenProps<StackParamList, 'Login'>;
 
@@ -69,7 +71,10 @@ const Login = (props: Props): React.JSX.Element => {
           testID="LoginBtn"
           mode="elevated"
           style={styles.loginBtn}
-          onPress={() => console.log('BTN_WAS_PRESSED')}
+          onPress={() => {
+            console.log('BTN_WAS_PRESSED');
+            loginWithEmailAndPassword(email, password, setErrors);
+          }}
           disabled={isButtonDisabled}>
           Login
         </Button>
