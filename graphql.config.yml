@@ -1,0 +1,16 @@
+schema:
+  - 'https://graphql.anilist.co'
+documents:
+  - './src/API/**/*.graphql'
+generates:
+  ./src/API/__generated__/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      skipTypename: false
+      withHooks: true
+      withHOC: false
+      withComponent: false
+      apolloReactHooksImportFrom: "@apollo/client"

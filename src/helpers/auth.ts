@@ -1,11 +1,17 @@
 import auth from '@react-native-firebase/auth';
-import { Errors } from "../types/registrationErros.ts";
+import {Errors} from '../types/registrationErros.ts';
+import {isUserAuthenticated} from '../reactiveVariablesStore/userAuthState.ts';
 
-export const signupWithEmailAndPassword = (email: string, password: string, setError: (val: Errors) => void) => {
+export const signupWithEmailAndPassword = (
+  email: string,
+  password: string,
+  setError: (val: Errors) => void,
+) => {
   auth()
     .createUserWithEmailAndPassword(email, password)
     .then(() => {
       console.log('User account created & signed in!');
+      isUserAuthenticated(true);
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
@@ -14,7 +20,7 @@ export const signupWithEmailAndPassword = (email: string, password: string, setE
           emailErrors: 'That email address is already in use!',
           passwordErrors: null,
           passwordConfirmationError: null,
-        })
+        });
       }
 
       if (error.code === 'auth/invalid-email') {
@@ -23,18 +29,23 @@ export const signupWithEmailAndPassword = (email: string, password: string, setE
           emailErrors: 'That email address is invalid!',
           passwordErrors: null,
           passwordConfirmationError: null,
-        })
+        });
       }
 
       console.error(error);
     });
 };
 
-export const loginWithEmailAndPassword = (email: string, password: string, setError: (val: Errors) => void) => {
+export const loginWithEmailAndPassword = (
+  email: string,
+  password: string,
+  setError: (val: Errors) => void,
+) => {
   auth()
     .signInWithEmailAndPassword(email, password)
-    .then((response) => {
+    .then(response => {
       console.log('User signed in!', response);
+      isUserAuthenticated(true);
     })
     .catch(error => {
       console.log(error.code);
@@ -44,7 +55,7 @@ export const loginWithEmailAndPassword = (email: string, password: string, setEr
           emailErrors: null,
           passwordErrors: 'Email or/and password are wrong',
           passwordConfirmationError: null,
-        })
+        });
       }
       if (error.code === 'auth/user-not-found') {
         console.log('User with this email not found!'); // EMAIL
@@ -52,7 +63,7 @@ export const loginWithEmailAndPassword = (email: string, password: string, setEr
           emailErrors: 'User with this email not found!',
           passwordErrors: null,
           passwordConfirmationError: null,
-        })
+        });
       }
 
       if (error.code === 'auth/wrong-password') {
@@ -61,7 +72,7 @@ export const loginWithEmailAndPassword = (email: string, password: string, setEr
           emailErrors: null,
           passwordErrors: 'The password is wrong',
           passwordConfirmationError: null,
-        })
+        });
       }
 
       console.error(error);
@@ -69,5 +80,10 @@ export const loginWithEmailAndPassword = (email: string, password: string, setEr
 };
 
 export const signOut = () => {
-  auth().signOut().then(() => console.log('User signed out!'));
+  auth()
+    .signOut()
+    .then(() => {
+      console.log('User signed out!');
+      isUserAuthenticated(false);
+    });
 };
