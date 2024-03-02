@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
-import {FlatList, View} from 'react-native';
+import React from 'react';
+import {FlatList, View, StyleSheet} from 'react-native';
 import {MediaSort, useGetAnimeListQuery} from '../API/__generated__/graphql.ts';
-import {ActivityIndicator, MD2Colors} from 'react-native-paper';
+import {ActivityIndicator, MD2Colors, Text} from 'react-native-paper';
 import {ListItem} from '../components/listItem.tsx';
 
 export const Anime = (): React.JSX.Element => {
@@ -14,29 +14,38 @@ export const Anime = (): React.JSX.Element => {
     },
   });
 
-  useEffect(() => {
-    if (data && data.Page && data.Page.media) {
-      console.log(data.Page.media[0]);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-    }
-  }, [error]);
-
   if (loading) {
     return <ActivityIndicator animating={true} color={MD2Colors.red800} />;
   }
 
+  if (error) {
+    return (
+      <Text variant="headlineSmall" style={styles.error}>
+        Failed to load data
+      </Text>
+    );
+  }
+
   return (
-    <View style={{paddingHorizontal: 12}}>
+    <View style={styles.container}>
       <FlatList
         data={data?.Page?.media}
         renderItem={({item}) => <ListItem item={item!} />}
-        style={{backgroundColor: '#ffffff', paddingTop: 12}}
+        style={styles.list}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+  list: {
+    backgroundColor: MD2Colors.white,
+    paddingTop: 12,
+  },
+  error: {
+    color: MD2Colors.red800,
+  },
+});

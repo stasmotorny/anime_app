@@ -1,0 +1,21 @@
+query GetMangaList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String) {
+    Page(page: $page, perPage: $perPage) {
+        media(sort: $sortType, search: $name, type: MANGA) {
+            id
+            type
+            title {
+                english
+            }
+            status
+            seasonYear
+            coverImage {
+                medium
+            }
+            bannerImage
+            genres
+            popularity
+            isFavourite
+            isFavouriteBlocked
+        }
+    }
+}
