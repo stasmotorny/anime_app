@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
-import {FlatList} from 'react-native';
-import {signOut} from '../helpers/auth.ts';
+import {FlatList, View} from 'react-native';
 import {MediaSort, useGetAnimeListQuery} from '../API/__generated__/graphql.ts';
-import {Button, ActivityIndicator, MD2Colors} from 'react-native-paper';
+import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 import {ListItem} from '../components/listItem.tsx';
 
-const Home = (): React.JSX.Element => {
+export const Anime = (): React.JSX.Element => {
   const {data, loading, error} = useGetAnimeListQuery({
     variables: {
       page: 1,
@@ -32,16 +31,12 @@ const Home = (): React.JSX.Element => {
   }
 
   return (
-    <>
-      <Button testID="SignupBtn" onPress={() => signOut()}>
-        Sign out
-      </Button>
+    <View style={{paddingHorizontal: 12}}>
       <FlatList
         data={data?.Page?.media}
         renderItem={({item}) => <ListItem item={item!} />}
+        style={{backgroundColor: '#ffffff', paddingTop: 12}}
       />
-    </>
+    </View>
   );
 };
-
-export default Home;

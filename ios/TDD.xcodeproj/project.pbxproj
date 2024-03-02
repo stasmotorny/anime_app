@@ -41,7 +41,9 @@
 		41E28331D99F30885F2250B2 /* Pods_TDD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TDD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5709B34CF0A7D63546082F79 /* Pods-TDD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDD.release.xcconfig"; path = "Target Support Files/Pods-TDD/Pods-TDD.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-TDD-TDDTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDD-TDDTests.debug.xcconfig"; path = "Target Support Files/Pods-TDD-TDDTests/Pods-TDD-TDDTests.debug.xcconfig"; sourceTree = "<group>"; };
+		79A4235A2B921F1300E53B9B /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		79B20E1F2B89313D004392C4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		79DB1B8F2B9352FD0006FFD5 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TDD/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-TDD-TDDTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TDD-TDDTests.release.xcconfig"; path = "Target Support Files/Pods-TDD-TDDTests/Pods-TDD-TDDTests.release.xcconfig"; sourceTree = "<group>"; };
 		BD4F407A2DFA58FC60C7F4CC /* Pods_TDD_TDDTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TDD_TDDTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +90,7 @@
 		13B07FAE1A68108700A75B9A /* TDD */ = {
 			isa = PBXGroup;
 			children = (
+				79A423592B921E2100E53B9B /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -106,6 +109,15 @@
 				BD4F407A2DFA58FC60C7F4CC /* Pods_TDD_TDDTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		79A423592B921E2100E53B9B /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				79DB1B8F2B9352FD0006FFD5 /* MaterialCommunityIcons.ttf */,
+				79A4235A2B921F1300E53B9B /* MaterialIcons.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
