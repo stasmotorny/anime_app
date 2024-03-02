@@ -4684,6 +4684,16 @@ export type GetAnimeListQueryVariables = Exact<{
 
 export type GetAnimeListQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', media?: Array<{ __typename?: 'Media', id: number, type?: MediaType | null, status?: MediaStatus | null, seasonYear?: number | null, bannerImage?: string | null, genres?: Array<string | null> | null, popularity?: number | null, isFavourite: boolean, isFavouriteBlocked: boolean, title?: { __typename?: 'MediaTitle', english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', medium?: string | null } | null } | null> | null } | null };
 
+export type GetMangaListQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['Int']['input']>;
+  perPage?: InputMaybe<Scalars['Int']['input']>;
+  sortType?: InputMaybe<Array<InputMaybe<MediaSort>> | InputMaybe<MediaSort>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetMangaListQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', media?: Array<{ __typename?: 'Media', id: number, type?: MediaType | null, status?: MediaStatus | null, seasonYear?: number | null, bannerImage?: string | null, genres?: Array<string | null> | null, popularity?: number | null, isFavourite: boolean, isFavouriteBlocked: boolean, title?: { __typename?: 'MediaTitle', english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', medium?: string | null } | null } | null> | null } | null };
+
 
 export const GetAnimeListDocument = gql`
     query GetAnimeList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String) {
@@ -4744,3 +4754,62 @@ export type GetAnimeListQueryHookResult = ReturnType<typeof useGetAnimeListQuery
 export type GetAnimeListLazyQueryHookResult = ReturnType<typeof useGetAnimeListLazyQuery>;
 export type GetAnimeListSuspenseQueryHookResult = ReturnType<typeof useGetAnimeListSuspenseQuery>;
 export type GetAnimeListQueryResult = Apollo.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
+export const GetMangaListDocument = gql`
+    query GetMangaList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String) {
+  Page(page: $page, perPage: $perPage) {
+    media(sort: $sortType, search: $name, type: MANGA) {
+      id
+      type
+      title {
+        english
+      }
+      status
+      seasonYear
+      coverImage {
+        medium
+      }
+      bannerImage
+      genres
+      popularity
+      isFavourite
+      isFavouriteBlocked
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMangaListQuery__
+ *
+ * To run a query within a React component, call `useGetMangaListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMangaListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMangaListQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
+ *      sortType: // value for 'sortType'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useGetMangaListQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMangaListQuery, GetMangaListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetMangaListQuery, GetMangaListQueryVariables>(GetMangaListDocument, options);
+      }
+export function useGetMangaListLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMangaListQuery, GetMangaListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetMangaListQuery, GetMangaListQueryVariables>(GetMangaListDocument, options);
+        }
+export function useGetMangaListSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetMangaListQuery, GetMangaListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetMangaListQuery, GetMangaListQueryVariables>(GetMangaListDocument, options);
+        }
+export type GetMangaListQueryHookResult = ReturnType<typeof useGetMangaListQuery>;
+export type GetMangaListLazyQueryHookResult = ReturnType<typeof useGetMangaListLazyQuery>;
+export type GetMangaListSuspenseQueryHookResult = ReturnType<typeof useGetMangaListSuspenseQuery>;
+export type GetMangaListQueryResult = Apollo.QueryResult<GetMangaListQuery, GetMangaListQueryVariables>;
