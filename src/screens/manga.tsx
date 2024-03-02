@@ -1,8 +1,8 @@
-import React from "react";
-import { MediaSort, useGetMangaListQuery } from "../API/__generated__/graphql.ts";
-import { ActivityIndicator, MD2Colors, Text } from "react-native-paper";
-import { FlatList, StyleSheet, View } from "react-native";
-import { ListItem } from "../components/listItem.tsx";
+import React from 'react';
+import {MediaSort, useGetMangaListQuery} from '../API/__generated__/graphql.ts';
+import {ActivityIndicator, MD2Colors, Text} from 'react-native-paper';
+import {FlatList, StyleSheet, View} from 'react-native';
+import {ListItem} from '../components/listItem.tsx';
 
 export const Manga = () => {
   const {data, loading, error} = useGetMangaListQuery({
@@ -19,7 +19,11 @@ export const Manga = () => {
   }
 
   if (error) {
-    return <Text variant="headlineSmall" style={styles.error}>Failed to load data</Text>
+    return (
+      <Text variant="headlineSmall" style={styles.error}>
+        Failed to load data
+      </Text>
+    );
   }
 
   return (
@@ -39,9 +43,9 @@ const styles = StyleSheet.create({
   },
   list: {
     backgroundColor: MD2Colors.white,
-    paddingTop: 12
+    paddingTop: 12,
   },
   error: {
-    color: MD2Colors.red800
-  }
+    color: MD2Colors.red800,
+  },
 });

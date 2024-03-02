@@ -19,7 +19,11 @@ export const Anime = (): React.JSX.Element => {
   }
 
   if (error) {
-    return <Text variant="headlineSmall" style={styles.error}>Failed to load data</Text>
+    return (
+      <Text variant="headlineSmall" style={styles.error}>
+        Failed to load data
+      </Text>
+    );
   }
 
   return (
@@ -39,9 +43,9 @@ const styles = StyleSheet.create({
   },
   list: {
     backgroundColor: MD2Colors.white,
-    paddingTop: 12
+    paddingTop: 12,
   },
   error: {
-    color: MD2Colors.red800
-  }
+    color: MD2Colors.red800,
+  },
 });
