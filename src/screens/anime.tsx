@@ -1,8 +1,9 @@
 import React from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import {MediaSort, useGetAnimeListQuery} from '../API/__generated__/graphql.ts';
-import {ActivityIndicator, MD2Colors, Text} from 'react-native-paper';
+import {ActivityIndicator, Text} from 'react-native-paper';
 import {ListItem} from '../components/listItem.tsx';
+import {Colors} from '../colors/colors.ts';
 
 export const Anime = (): React.JSX.Element => {
   const {data, loading, error} = useGetAnimeListQuery({
@@ -15,7 +16,7 @@ export const Anime = (): React.JSX.Element => {
   });
 
   if (loading) {
-    return <ActivityIndicator animating={true} color={MD2Colors.red800} />;
+    return <ActivityIndicator animating={true} color={Colors.red800} />;
   }
 
   if (error) {
@@ -40,12 +41,13 @@ export const Anime = (): React.JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
+    backgroundColor: Colors.black
   },
   list: {
-    backgroundColor: MD2Colors.white,
+    backgroundColor: Colors.black,
     paddingTop: 12,
   },
   error: {
-    color: MD2Colors.red800,
+    color: Colors.red800,
   },
 });

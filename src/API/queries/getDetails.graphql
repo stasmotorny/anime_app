@@ -1,0 +1,31 @@
+query GetDetails($id: Int) {
+    Media(id: $id) {
+        description
+        coverImage {
+            large
+        }
+        title {
+            english
+        }
+        genres
+        averageScore
+        relations {
+            nodes {
+                id
+                title {
+                    english
+                }
+                coverImage {
+                    medium
+                }
+                isFavourite
+                isFavouriteBlocked
+            }
+        }
+        nextAiringEpisode {
+            id
+            airingAt
+            episode
+        }
+    }
+}

@@ -4684,6 +4684,13 @@ export type GetAnimeListQueryVariables = Exact<{
 
 export type GetAnimeListQuery = { __typename?: 'Query', Page?: { __typename?: 'Page', media?: Array<{ __typename?: 'Media', id: number, type?: MediaType | null, status?: MediaStatus | null, seasonYear?: number | null, bannerImage?: string | null, genres?: Array<string | null> | null, popularity?: number | null, isFavourite: boolean, isFavouriteBlocked: boolean, title?: { __typename?: 'MediaTitle', english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', medium?: string | null } | null } | null> | null } | null };
 
+export type GetDetailsQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetDetailsQuery = { __typename?: 'Query', Media?: { __typename?: 'Media', description?: string | null, genres?: Array<string | null> | null, averageScore?: number | null, coverImage?: { __typename?: 'MediaCoverImage', large?: string | null } | null, title?: { __typename?: 'MediaTitle', english?: string | null } | null, relations?: { __typename?: 'MediaConnection', nodes?: Array<{ __typename?: 'Media', id: number, isFavourite: boolean, isFavouriteBlocked: boolean, title?: { __typename?: 'MediaTitle', english?: string | null } | null, coverImage?: { __typename?: 'MediaCoverImage', medium?: string | null } | null } | null> | null } | null, nextAiringEpisode?: { __typename?: 'AiringSchedule', id: number, airingAt: number, episode: number } | null } | null };
+
 export type GetMangaListQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
@@ -4754,6 +4761,72 @@ export type GetAnimeListQueryHookResult = ReturnType<typeof useGetAnimeListQuery
 export type GetAnimeListLazyQueryHookResult = ReturnType<typeof useGetAnimeListLazyQuery>;
 export type GetAnimeListSuspenseQueryHookResult = ReturnType<typeof useGetAnimeListSuspenseQuery>;
 export type GetAnimeListQueryResult = Apollo.QueryResult<GetAnimeListQuery, GetAnimeListQueryVariables>;
+export const GetDetailsDocument = gql`
+    query GetDetails($id: Int) {
+  Media(id: $id) {
+    description
+    coverImage {
+      large
+    }
+    title {
+      english
+    }
+    genres
+    averageScore
+    relations {
+      nodes {
+        id
+        title {
+          english
+        }
+        coverImage {
+          medium
+        }
+        isFavourite
+        isFavouriteBlocked
+      }
+    }
+    nextAiringEpisode {
+      id
+      airingAt
+      episode
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDetailsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetDetailsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetDetailsQuery, GetDetailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetDetailsQuery, GetDetailsQueryVariables>(GetDetailsDocument, options);
+      }
+export function useGetDetailsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetDetailsQuery, GetDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetDetailsQuery, GetDetailsQueryVariables>(GetDetailsDocument, options);
+        }
+export function useGetDetailsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetDetailsQuery, GetDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetDetailsQuery, GetDetailsQueryVariables>(GetDetailsDocument, options);
+        }
+export type GetDetailsQueryHookResult = ReturnType<typeof useGetDetailsQuery>;
+export type GetDetailsLazyQueryHookResult = ReturnType<typeof useGetDetailsLazyQuery>;
+export type GetDetailsSuspenseQueryHookResult = ReturnType<typeof useGetDetailsSuspenseQuery>;
+export type GetDetailsQueryResult = Apollo.QueryResult<GetDetailsQuery, GetDetailsQueryVariables>;
 export const GetMangaListDocument = gql`
     query GetMangaList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String) {
   Page(page: $page, perPage: $perPage) {

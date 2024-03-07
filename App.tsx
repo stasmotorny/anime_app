@@ -9,6 +9,7 @@ import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import {useReactiveVar} from '@apollo/client';
 import {isUserAuthenticated} from './src/reactiveVariablesStore/userAuthState.ts';
 import PaperBottomNavigation from './src/navigators/paperBottomNavigation.tsx';
+import {Details} from './src/screens/details.tsx';
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -34,6 +35,11 @@ function App(): React.JSX.Element {
                 name="Home"
                 component={PaperBottomNavigation}
                 options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="Details"
+                component={Details}
+                options={{headerShown: true}}
               />
             </Stack.Group>
           )}
