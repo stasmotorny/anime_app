@@ -4,15 +4,19 @@ import {Anime} from '../screens/anime.tsx';
 import {Manga} from '../screens/manga.tsx';
 import {Collection} from '../screens/collection.tsx';
 import {signOut} from '../helpers/auth.ts';
-import { Colors } from "../colors/colors.ts";
-import { StyleSheet } from "react-native";
+import {Colors} from '../colors/colors.ts';
+import {StyleSheet} from 'react-native';
 
 const PaperBottomNavigation = () => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'anime', title: 'Anime', focusedIcon: 'television'},
     {key: 'manga', title: 'Manga', focusedIcon: 'book-open-outline'},
-    {key: 'collection', title: 'Collection', focusedIcon: 'cards-heart-outline'},
+    {
+      key: 'collection',
+      title: 'Collection',
+      focusedIcon: 'cards-heart-outline',
+    },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
@@ -26,9 +30,16 @@ const PaperBottomNavigation = () => {
   return (
     <>
       <Appbar.Header style={styles.appbar}>
-        <Appbar.Content title={routes[index].title} titleStyle={styles.appBarTitle}/>
+        <Appbar.Content
+          title={routes[index].title}
+          titleStyle={styles.appBarTitle}
+        />
         <Appbar.Action icon="magnify" onPress={() => {}} color={iconColor} />
-        <Appbar.Action icon="logout" onPress={() => signOut()} color={iconColor} />
+        <Appbar.Action
+          icon="logout"
+          onPress={() => signOut()}
+          color={iconColor}
+        />
       </Appbar.Header>
       <BottomNavigation
         navigationState={{index, routes}}
@@ -55,8 +66,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.black,
   },
   activeIndicator: {
-    backgroundColor: Colors.opacityWhite
-  }
+    backgroundColor: Colors.opacityWhite,
+  },
 });
 
 export default PaperBottomNavigation;
