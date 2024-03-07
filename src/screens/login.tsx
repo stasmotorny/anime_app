@@ -6,8 +6,8 @@ import validator from 'validator';
 import type {StackScreenProps} from '@react-navigation/native-stack';
 import {StackParamList} from '../types/navigation.ts';
 import {Errors} from '../types/registrationErros.ts';
-import { loginWithEmailAndPassword } from "../helpers/auth.ts";
-import {useNavigation} from '@react-navigation/core';
+import {loginWithEmailAndPassword} from '../helpers/auth.ts';
+import {Colors} from '../colors/colors.ts';
 
 type Props = StackScreenProps<StackParamList, 'Login'>;
 
@@ -93,10 +93,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#eeeeee',
+    backgroundColor: Colors.white,
   },
   errorMsg: {
-    color: '#ee0505',
+    color: Colors.red800,
   },
   loginBtn: {
     marginTop: 48,

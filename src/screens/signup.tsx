@@ -7,6 +7,7 @@ import {StackParamList} from '../types/navigation.ts';
 import type {StackScreenProps} from '@react-navigation/native-stack';
 import {Errors} from '../types/registrationErros.ts';
 import {signupWithEmailAndPassword} from '../helpers/auth.ts';
+import {Colors} from '../colors/colors.ts';
 
 type Props = StackScreenProps<StackParamList, 'Sign_up'>;
 
@@ -14,7 +15,8 @@ const SignUp = (props: Props): React.JSX.Element => {
   const {navigation} = props;
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState<boolean>(false);
+  const [isPasswordConfirmed, setIsPasswordConfirmed] =
+    useState<boolean>(false);
   const [errors, setErrors] = useState<Errors>({
     emailErrors: null,
     passwordErrors: null,
@@ -114,17 +116,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#eeeeee',
+    backgroundColor: Colors.white,
   },
   errorMsg: {
-    color: '#ee0505',
+    color: Colors.red800,
   },
   loginBtn: {
     marginTop: 48,
     width: '45%',
     alignSelf: 'center',
   },
-  secondInput: {marginTop: 16},
+  secondInput: {
+    marginTop: 16,
+  },
 });
 
 export default SignUp;
