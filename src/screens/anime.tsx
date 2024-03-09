@@ -33,8 +33,6 @@ export const Anime = (): React.JSX.Element => {
     );
   }
 
-  //COmment to test auto testing
-
   return (
     <View style={styles.container}>
       <FlatList
