@@ -16,10 +16,16 @@ export const Manga = () => {
   });
 
   if (loading) {
-    return <ActivityIndicator animating={true} color={Colors.red800} />;
+    return (
+      <ActivityIndicator
+        testID="activity-indicator"
+        animating={true}
+        color={Colors.red800}
+      />
+    );
   }
 
-  if (error) {
+  if (error || !data?.Page?.media) {
     return (
       <Text variant="headlineSmall" style={styles.error}>
         Failed to load data

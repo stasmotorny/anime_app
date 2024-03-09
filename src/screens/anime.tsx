@@ -16,10 +16,16 @@ export const Anime = (): React.JSX.Element => {
   });
 
   if (loading) {
-    return <ActivityIndicator animating={true} color={Colors.red800} />;
+    return (
+      <ActivityIndicator
+        testID="activity-indicator"
+        animating={true}
+        color={Colors.red800}
+      />
+    );
   }
 
-  if (error) {
+  if (error || !data?.Page?.media) {
     return (
       <Text variant="headlineSmall" style={styles.error}>
         Failed to load data
@@ -41,7 +47,7 @@ export const Anime = (): React.JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    backgroundColor: Colors.black
+    backgroundColor: Colors.black,
   },
   list: {
     backgroundColor: Colors.black,

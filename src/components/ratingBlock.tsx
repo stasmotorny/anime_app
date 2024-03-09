@@ -10,7 +10,7 @@ type Props = {
 export const RatingBlock = (props: Props) => {
   const {score} = props;
   return (
-    <Card style={styles.cardStyle}>
+    <Card testID="card-rating" style={styles.cardStyle}>
       <Card.Title
         title="Rating:"
         style={styles.cardTitle}

@@ -2,15 +2,16 @@ import {Media} from '../API/__generated__/graphql.ts';
 import {Card, Text} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import {useNavigation} from '@react-navigation/core';
+import {useNavigation} from '@react-navigation/native';
 import {StackParamList} from '../types/navigation.ts';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { Colors } from "../colors/colors.ts";
+import {Colors} from '../colors/colors.ts';
 
 export const ListItem = ({item}: {item: Media}) => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   return (
     <Card
+      testID="item-card"
       onPress={() => navigation.navigate('Details', {itemId: item.id})}
       contentStyle={styles.cardContent}
       style={styles.card}>
@@ -26,8 +27,12 @@ export const ListItem = ({item}: {item: Media}) => {
           titleStyle={styles.titleStyle}
         />
         <Card.Content>
-          <Text style={styles.textStyle} variant="titleMedium">Status</Text>
-          <Text style={styles.textStyle} variant="bodySmall">{item?.status}</Text>
+          <Text style={styles.textStyle} variant="titleMedium">
+            Status
+          </Text>
+          <Text style={styles.textStyle} variant="bodySmall">
+            {item?.status}
+          </Text>
         </Card.Content>
       </View>
     </Card>
