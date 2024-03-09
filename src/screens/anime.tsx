@@ -33,6 +33,8 @@ export const Anime = (): React.JSX.Element => {
     );
   }
 
+  //Check
+
   return (
     <View style={styles.container}>
       <FlatList
