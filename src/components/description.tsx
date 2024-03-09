@@ -1,7 +1,7 @@
-import React from "react";
-import { Colors } from "../colors/colors.ts";
-import { Card, Text } from "react-native-paper";
-import { StyleSheet } from "react-native";
+import React from 'react';
+import {Colors} from '../colors/colors.ts';
+import {Card, Text} from 'react-native-paper';
+import {StyleSheet} from 'react-native';
 
 type Props = {
   description: string | null | undefined;
@@ -10,10 +10,12 @@ type Props = {
 export const Description = (props: Props) => {
   const {description} = props;
   const regex = /(<([^>]+)>)/gi;
-  const descriptionText = description ? description.replace(regex, '') : 'Description was not found';
+  const descriptionText = description
+    ? description.replace(regex, '')
+    : 'Description was not found';
 
   return (
-    <Card style={styles.cardStyle}>
+    <Card testID="description-card" style={styles.cardStyle}>
       <Card.Title
         title="Description:"
         titleNumberOfLines={1}

@@ -1,5 +1,9 @@
 module.exports = {
   preset: 'react-native',
-  setupFilesAfterEnv: ['@testing-library/react-native/extend-expect', './jest-setup.ts'],
-  transformIgnorePatterns: ["/node_modules/(?!@firebase)/"],
+  setupFilesAfterEnv: [
+    '@testing-library/react-native/extend-expect',
+    './jest-setup.ts',
+  ],
+  transformIgnorePatterns: ['/node_modules/(?!@firebase)/'],
+  modulePathIgnorePatterns: ['<rootDir>/__tests__/__mocks__'],
 };

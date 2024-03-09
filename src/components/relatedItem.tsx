@@ -1,7 +1,7 @@
 import React from 'react';
 import {Icon, Surface, Text, TouchableRipple} from 'react-native-paper';
 import {Image, View, StyleSheet} from 'react-native';
-import {useNavigation} from '@react-navigation/core';
+import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StackParamList} from '../types/navigation.ts';
 import {Media} from '../API/__generated__/graphql.ts';
@@ -15,22 +15,26 @@ export const RelatedItem = (props: Props) => {
   const {item} = props;
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   return (
-    <Surface style={styles.surfaceStyle}>
+    <Surface testID="related-item" style={styles.surfaceStyle}>
       <TouchableRipple
+        testID="related-item-touchable"
         rippleColor={Colors.rippleColor}
-        onPress={() => navigation.navigate('Details', {itemId: item?.id!})}
+        onPress={() => navigation.navigate('Details', {itemId: item.id!})}
         borderless={true}
         style={styles.touchableRippleStyle}>
         <View style={styles.informationContainerStyle}>
           {item?.coverImage?.medium ? (
             <Image
+              testID="related-item-image"
               resizeMode="contain"
               source={{uri: item?.coverImage?.medium}}
               alt="No image"
               style={styles.imageStyle}
             />
           ) : null}
-          <Text style={styles.textStyle}>{item?.title?.english || 'Unknown'}</Text>
+          <Text style={styles.textStyle}>
+            {item?.title?.english || 'Unknown'}
+          </Text>
           <Icon source="chevron-right" size={24} color={Colors.white} />
         </View>
       </TouchableRipple>

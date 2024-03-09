@@ -1,6 +1,6 @@
 import React from 'react';
 import {Colors} from '../colors/colors.ts';
-import { Card, Chip, Text } from "react-native-paper";
+import {Card, Chip, Text} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
 
 type Props = {
@@ -12,7 +12,7 @@ export const GenresList = (props: Props) => {
   const genres = data ? data : 'Genres were not specified';
 
   return (
-    <Card style={styles.cardStyle}>
+    <Card testID="genres-card" style={styles.cardStyle}>
       <Card.Title
         title="Genres:"
         titleNumberOfLines={1}
@@ -20,18 +20,24 @@ export const GenresList = (props: Props) => {
       />
       <Card.Content>
         <View style={styles.genresContainer}>
-          {typeof genres !== 'string' ? genres.map(item => {
-            if (item) {
-              return (
-                <Chip
-                  compact={true}
-                  style={styles.chipStyle}
-                  textStyle={styles.chipText}>
-                  {item}
-                </Chip>
-              );
-            }
-          }) : <Text style={styles.textStyle}>{genres}</Text>}
+          {typeof genres !== 'string' ? (
+            genres.map((item, index) => {
+              if (item) {
+                return (
+                  <Chip
+                    testID="genres-chip"
+                    key={index}
+                    compact={true}
+                    style={styles.chipStyle}
+                    textStyle={styles.chipText}>
+                    {item}
+                  </Chip>
+                );
+              }
+            })
+          ) : (
+            <Text style={styles.textStyle}>{genres}</Text>
+          )}
         </View>
       </Card.Content>
     </Card>
@@ -61,6 +67,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   textStyle: {
-    color: Colors.white
+    color: Colors.white,
   },
 });
