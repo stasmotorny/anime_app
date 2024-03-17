@@ -16,5 +16,5 @@ it('renders with genres', () => {
 
 it('dont renders null if some genres are null', () => {
   const wrapper = render(<GenresList data={['comedy', null]} />);
-  expect(wrapper.getAllByTestId('genres-chip')).toHaveLength(1);
+  expect(wrapper.getAllByTestId('chip')).toHaveLength(1);
 });
