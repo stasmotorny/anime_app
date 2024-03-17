@@ -1,7 +1,7 @@
 import React from 'react';
-import {Colors} from '../colors/colors.ts';
 import {Avatar, Card} from 'react-native-paper';
 import {StyleSheet} from 'react-native';
+import {GlobalStyles} from '../globalStyles/globalStyles.ts';
 
 type Props = {
   score?: string;
@@ -10,11 +10,10 @@ type Props = {
 export const RatingBlock = (props: Props) => {
   const {score} = props;
   return (
-    <Card testID="card-rating" style={styles.cardStyle}>
+    <Card testID="card-rating" style={GlobalStyles.detailsCardStyle}>
       <Card.Title
         title="Rating:"
-        style={styles.cardTitle}
-        titleStyle={styles.cardTitleText}
+        titleStyle={GlobalStyles.detailsCardTitleText}
       />
       <Card.Content style={styles.cardContent}>
         <Avatar.Text label={score || '??'} />
@@ -24,17 +23,6 @@ export const RatingBlock = (props: Props) => {
 };
 
 const styles = StyleSheet.create({
-  cardStyle: {
-    backgroundColor: Colors.grey900,
-    marginTop: 16,
-  },
-  cardTitle: {
-    width: '50%',
-  },
-  cardTitleText: {
-    color: Colors.white,
-    fontWeight: 'bold',
-  },
   cardContent: {
     alignItems: 'center',
   },

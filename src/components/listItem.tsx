@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackParamList} from '../types/navigation.ts';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Colors} from '../colors/colors.ts';
+import {statusTitles} from '../helpers/enumFormatters.ts';
 
 export const ListItem = ({item}: {item: Media}) => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
@@ -31,7 +32,7 @@ export const ListItem = ({item}: {item: Media}) => {
             Status
           </Text>
           <Text style={styles.textStyle} variant="bodySmall">
-            {item?.status}
+            {item?.status ? statusTitles[item.status] : 'Unknown'}
           </Text>
         </Card.Content>
       </View>

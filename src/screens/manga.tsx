@@ -1,59 +1,39 @@
 import React from 'react';
-import {MediaSort, useGetMangaListQuery} from '../API/__generated__/graphql.ts';
-import {ActivityIndicator, Text} from 'react-native-paper';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {useGetMangaListQuery} from '../API/__generated__/graphql.ts';
+import {FlatList, View} from 'react-native';
 import {ListItem} from '../components/listItem.tsx';
-import {Colors} from '../colors/colors.ts';
+import {ScreenError} from '../components/screenError.tsx';
+import {GlobalStyles} from '../globalStyles/globalStyles.ts';
+import {ScreenLoadingSpinner} from '../components/screenLoadingSpinner.tsx';
+import {useReactiveVar} from '@apollo/client';
+import {filterState} from '../reactiveVariablesStore/filterState.ts';
+import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
+import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
 
 export const Manga = () => {
+  const searchQuery = useReactiveVar(filterState);
+  const screen = useReactiveVar(currentScreen);
+
   const {data, loading, error} = useGetMangaListQuery({
-    variables: {
-      page: 1,
-      perPage: 50,
-      sortType: MediaSort.PopularityDesc,
-      name: 'demon slayer',
-    },
+    variables: updateQueryVariable(searchQuery),
+    skip: screen !== 'Manga',
   });
 
   if (loading) {
-    return (
-      <ActivityIndicator
-        testID="activity-indicator"
-        animating={true}
-        color={Colors.red800}
-      />
-    );
+    return <ScreenLoadingSpinner />;
   }
 
   if (error || !data?.Page?.media) {
-    return (
-      <Text variant="headlineSmall" style={styles.error}>
-        Failed to load data
-      </Text>
-    );
+    return <ScreenError />;
   }
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.screenContainer}>
       <FlatList
         data={data?.Page?.media}
         renderItem={({item}) => <ListItem item={item!} />}
-        style={styles.list}
+        style={GlobalStyles.screenFlatList}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    backgroundColor: Colors.black,
-  },
-  list: {
-    backgroundColor: Colors.black,
-    paddingTop: 12,
-  },
-  error: {
-    color: Colors.red800,
-  },
-});

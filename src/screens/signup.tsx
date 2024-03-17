@@ -2,17 +2,11 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import validator from 'validator';
-import {StackParamList} from '../types/navigation.ts';
-// @ts-ignore
-import type {StackScreenProps} from '@react-navigation/native-stack';
 import {Errors} from '../types/registrationErros.ts';
 import {signupWithEmailAndPassword} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
 
-type Props = StackScreenProps<StackParamList, 'Sign_up'>;
-
-const SignUp = (props: Props): React.JSX.Element => {
-  const {navigation} = props;
+const SignUp = (): React.JSX.Element => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isPasswordConfirmed, setIsPasswordConfirmed] =

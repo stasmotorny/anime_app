@@ -1,7 +1,7 @@
 import React from 'react';
-import {Colors} from '../colors/colors.ts';
-import {Card, Chip, Text} from 'react-native-paper';
-import {StyleSheet, View} from 'react-native';
+import {Card, Text} from 'react-native-paper';
+import {GlobalStyles} from '../globalStyles/globalStyles.ts';
+import {SurfaceWithChips} from './surfaceWithChips.tsx';
 
 type Props = {
   data: (string | null)[] | null | undefined;
@@ -9,64 +9,31 @@ type Props = {
 
 export const GenresList = (props: Props) => {
   const {data} = props;
-  const genres = data ? data : 'Genres were not specified';
+
+  const cleanGenresFromNull = (arr: (string | null)[]): string[] => {
+    return arr.filter((item): item is string => item !== null);
+  };
 
   return (
-    <Card testID="genres-card" style={styles.cardStyle}>
+    <Card testID="genres-card" style={GlobalStyles.detailsCardStyle}>
       <Card.Title
         title="Genres:"
         titleNumberOfLines={1}
-        titleStyle={styles.cardTitle}
+        titleStyle={GlobalStyles.detailsCardTitleText}
       />
       <Card.Content>
-        <View style={styles.genresContainer}>
-          {typeof genres !== 'string' ? (
-            genres.map((item, index) => {
-              if (item) {
-                return (
-                  <Chip
-                    testID="genres-chip"
-                    key={index}
-                    compact={true}
-                    style={styles.chipStyle}
-                    textStyle={styles.chipText}>
-                    {item}
-                  </Chip>
-                );
-              }
-            })
-          ) : (
-            <Text style={styles.textStyle}>{genres}</Text>
-          )}
-        </View>
+        {data ? (
+          <SurfaceWithChips
+            isSelectedCheckParameter={null}
+            itemsArray={cleanGenresFromNull(data)}
+            isDark
+          />
+        ) : (
+          <Text style={GlobalStyles.darkSchemeTextStyle}>
+            Genres were not specified
+          </Text>
+        )}
       </Card.Content>
     </Card>
   );
 };
-
-const styles = StyleSheet.create({
-  cardStyle: {
-    backgroundColor: Colors.grey900,
-    marginTop: 16,
-  },
-  cardTitle: {
-    color: Colors.white,
-    fontWeight: 'bold',
-  },
-  genresContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  chipStyle: {
-    marginRight: 6,
-    backgroundColor: Colors.black,
-  },
-  chipText: {
-    color: Colors.white,
-    fontSize: 12,
-  },
-  textStyle: {
-    color: Colors.white,
-  },
-});

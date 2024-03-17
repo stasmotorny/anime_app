@@ -3,6 +3,7 @@ import {ImageBackground, StyleSheet, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Avatar, Text} from 'react-native-paper';
 import {Colors} from '../colors/colors.ts';
+import {GlobalStyles} from '../globalStyles/globalStyles.ts';
 
 type Props = {
   imgUrl?: string | null;
@@ -29,7 +30,7 @@ export const GradientImageWithText = (props: Props) => {
         </LinearGradient>
       </ImageBackground>
       <View style={styles.titleContainer}>
-        <Text style={styles.titleStyle} variant="headlineLarge">
+        <Text style={GlobalStyles.darkSchemeTextStyle} variant="headlineLarge">
           {title || 'Unknown'}
         </Text>
       </View>
@@ -58,8 +59,5 @@ const styles = StyleSheet.create({
   titleContainer: {
     marginTop: -24,
     paddingHorizontal: 16,
-  },
-  titleStyle: {
-    color: Colors.white,
   },
 });

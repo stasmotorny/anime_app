@@ -1,61 +1,39 @@
 import React from 'react';
-import {FlatList, View, StyleSheet} from 'react-native';
-import {MediaSort, useGetAnimeListQuery} from '../API/__generated__/graphql.ts';
-import {ActivityIndicator, Text} from 'react-native-paper';
+import {FlatList, View} from 'react-native';
+import {useGetAnimeListQuery} from '../API/__generated__/graphql.ts';
 import {ListItem} from '../components/listItem.tsx';
-import {Colors} from '../colors/colors.ts';
-
+import {useReactiveVar} from '@apollo/client';
+import {filterState} from '../reactiveVariablesStore/filterState.ts';
+import {ScreenError} from '../components/screenError.tsx';
+import {GlobalStyles} from '../globalStyles/globalStyles.ts';
+import {ScreenLoadingSpinner} from '../components/screenLoadingSpinner.tsx';
+import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
+import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
 export const Anime = (): React.JSX.Element => {
+  const searchQuery = useReactiveVar(filterState);
+  const screen = useReactiveVar(currentScreen);
+
   const {data, loading, error} = useGetAnimeListQuery({
-    variables: {
-      page: 1,
-      perPage: 50,
-      sortType: MediaSort.PopularityDesc,
-      name: 'demon slayer',
-    },
+    variables: updateQueryVariable(searchQuery),
+    skip: screen !== 'Anime',
   });
 
   if (loading) {
-    return (
-      <ActivityIndicator
-        testID="activity-indicator"
-        animating={true}
-        color={Colors.red800}
-      />
-    );
+    return <ScreenLoadingSpinner />;
   }
 
-  if (error || !data?.Page?.media) {
-    return (
-      <Text variant="headlineSmall" style={styles.error}>
-        Failed to load data
-      </Text>
-    );
+  if (error || !data?.Page?.media || !data?.Page?.media.length) {
+    console.log(error);
+    return <ScreenError />;
   }
-
-  //Check
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.screenContainer}>
       <FlatList
         data={data?.Page?.media}
         renderItem={({item}) => <ListItem item={item!} />}
-        style={styles.list}
+        style={GlobalStyles.screenFlatList}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    backgroundColor: Colors.black,
-  },
-  list: {
-    backgroundColor: Colors.black,
-    paddingTop: 12,
-  },
-  error: {
-    color: Colors.red800,
-  },
-});
