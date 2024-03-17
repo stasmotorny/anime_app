@@ -1,7 +1,6 @@
 import React from 'react';
-import {Colors} from '../colors/colors.ts';
 import {Card, Text} from 'react-native-paper';
-import {StyleSheet} from 'react-native';
+import {GlobalStyles} from '../globalStyles/globalStyles.ts';
 
 type Props = {
   description: string | null | undefined;
@@ -15,31 +14,17 @@ export const Description = (props: Props) => {
     : 'Description was not found';
 
   return (
-    <Card testID="description-card" style={styles.cardStyle}>
+    <Card testID="description-card" style={GlobalStyles.detailsCardStyle}>
       <Card.Title
         title="Description:"
         titleNumberOfLines={1}
-        titleStyle={styles.titleStyle}
+        titleStyle={GlobalStyles.detailsCardTitleText}
       />
       <Card.Content>
-        <Text variant="bodySmall" style={styles.textStyle}>
+        <Text variant="bodySmall" style={GlobalStyles.darkSchemeTextStyle}>
           {descriptionText}
         </Text>
       </Card.Content>
     </Card>
   );
 };
-
-const styles = StyleSheet.create({
-  cardStyle: {
-    backgroundColor: Colors.grey900,
-    marginTop: 16,
-  },
-  titleStyle: {
-    color: Colors.white,
-    fontWeight: 'bold',
-  },
-  textStyle: {
-    color: Colors.white,
-  },
-});

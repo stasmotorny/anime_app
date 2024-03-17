@@ -4679,6 +4679,10 @@ export type GetAnimeListQueryVariables = Exact<{
   perPage?: InputMaybe<Scalars['Int']['input']>;
   sortType?: InputMaybe<Array<InputMaybe<MediaSort>> | InputMaybe<MediaSort>>;
   name?: InputMaybe<Scalars['String']['input']>;
+  genre?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<MediaStatus>;
+  startDate_greater?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
+  startDate_lesser?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
 }>;
 
 
@@ -4696,6 +4700,10 @@ export type GetMangaListQueryVariables = Exact<{
   perPage?: InputMaybe<Scalars['Int']['input']>;
   sortType?: InputMaybe<Array<InputMaybe<MediaSort>> | InputMaybe<MediaSort>>;
   name?: InputMaybe<Scalars['String']['input']>;
+  genre?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<MediaStatus>;
+  startDate_greater?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
+  startDate_lesser?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
 }>;
 
 
@@ -4703,9 +4711,17 @@ export type GetMangaListQuery = { __typename?: 'Query', Page?: { __typename?: 'P
 
 
 export const GetAnimeListDocument = gql`
-    query GetAnimeList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String) {
+    query GetAnimeList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String, $genre: String, $status: MediaStatus, $startDate_greater: FuzzyDateInt, $startDate_lesser: FuzzyDateInt) {
   Page(page: $page, perPage: $perPage) {
-    media(sort: $sortType, search: $name, type: ANIME) {
+    media(
+      sort: $sortType
+      search: $name
+      type: ANIME
+      genre: $genre
+      status: $status
+      startDate_greater: $startDate_greater
+      startDate_lesser: $startDate_lesser
+    ) {
       id
       type
       title {
@@ -4742,6 +4758,10 @@ export const GetAnimeListDocument = gql`
  *      perPage: // value for 'perPage'
  *      sortType: // value for 'sortType'
  *      name: // value for 'name'
+ *      genre: // value for 'genre'
+ *      status: // value for 'status'
+ *      startDate_greater: // value for 'startDate_greater'
+ *      startDate_lesser: // value for 'startDate_lesser'
  *   },
  * });
  */
@@ -4828,9 +4848,17 @@ export type GetDetailsLazyQueryHookResult = ReturnType<typeof useGetDetailsLazyQ
 export type GetDetailsSuspenseQueryHookResult = ReturnType<typeof useGetDetailsSuspenseQuery>;
 export type GetDetailsQueryResult = Apollo.QueryResult<GetDetailsQuery, GetDetailsQueryVariables>;
 export const GetMangaListDocument = gql`
-    query GetMangaList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String) {
+    query GetMangaList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String, $genre: String, $status: MediaStatus, $startDate_greater: FuzzyDateInt, $startDate_lesser: FuzzyDateInt) {
   Page(page: $page, perPage: $perPage) {
-    media(sort: $sortType, search: $name, type: MANGA) {
+    media(
+      sort: $sortType
+      search: $name
+      type: MANGA
+      genre: $genre
+      status: $status
+      startDate_greater: $startDate_greater
+      startDate_lesser: $startDate_lesser
+    ) {
       id
       type
       title {
@@ -4867,6 +4895,10 @@ export const GetMangaListDocument = gql`
  *      perPage: // value for 'perPage'
  *      sortType: // value for 'sortType'
  *      name: // value for 'name'
+ *      genre: // value for 'genre'
+ *      status: // value for 'status'
+ *      startDate_greater: // value for 'startDate_greater'
+ *      startDate_lesser: // value for 'startDate_lesser'
  *   },
  * });
  */

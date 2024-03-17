@@ -1,6 +1,26 @@
-query GetMangaList($page: Int, $perPage: Int, $sortType: [MediaSort], $name: String) {
-    Page(page: $page, perPage: $perPage) {
-        media(sort: $sortType, search: $name, type: MANGA) {
+query GetMangaList(
+    $page: Int,
+    $perPage: Int,
+    $sortType: [MediaSort],
+    $name: String,
+    $genre: String,
+    $status: MediaStatus,
+    $startDate_greater: FuzzyDateInt,
+    $startDate_lesser: FuzzyDateInt,
+) {
+    Page(
+        page: $page,
+        perPage: $perPage
+    ) {
+        media(
+            sort: $sortType,
+            search: $name,
+            type: MANGA,
+            genre: $genre,
+            status: $status,
+            startDate_greater: $startDate_greater,
+            startDate_lesser: $startDate_lesser
+        ) {
             id
             type
             title {

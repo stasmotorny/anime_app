@@ -15,7 +15,19 @@ const Stack = createStackNavigator<StackParamList>();
 
 const client = new ApolloClient({
   uri: 'https://graphql.anilist.co',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          Page: {
+            merge(existing, incoming) {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
+  }),
 });
 
 function App(): React.JSX.Element {
