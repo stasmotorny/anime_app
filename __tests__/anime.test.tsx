@@ -7,6 +7,7 @@ import {
 import {Anime} from '../src/screens/anime.tsx';
 import {it, expect} from '@jest/globals';
 import {MockedNavigator} from './__mocks__/mocks.tsx';
+import { currentScreen } from "../src/reactiveVariablesStore/currentScreen.ts";
 
 const mocks = [
   {
@@ -16,7 +17,6 @@ const mocks = [
         page: 1,
         perPage: 50,
         sortType: MediaSort.PopularityDesc,
-        name: 'demon slayer',
       },
     },
     result: {
@@ -55,7 +55,6 @@ const errorMock = [
         page: 1,
         perPage: 50,
         sortType: MediaSort.PopularityDesc,
-        name: 'demon slayer',
       },
     },
     error: new Error('test error'),
@@ -63,6 +62,7 @@ const errorMock = [
 ];
 
 it('renders without error', async () => {
+  currentScreen('Anime');
   const wrapper = render(<MockedNavigator component={Anime} mocks={mocks} />);
   await waitFor(() => [
     expect(wrapper.getAllByText('Some title')).toHaveLength(1),
@@ -72,6 +72,7 @@ it('renders without error', async () => {
 });
 
 it('should render loading spinner while data is loading', async () => {
+  currentScreen('Anime');
   const wrapper = render(<MockedNavigator component={Anime} mocks={mocks} />);
   await waitFor(() => [
     expect(wrapper.getAllByTestId('activity-indicator')).toHaveLength(1),
@@ -79,6 +80,7 @@ it('should render loading spinner while data is loading', async () => {
 });
 
 it('should error message there was an error on loading data', async () => {
+  currentScreen('Anime');
   const wrapper = render(
     <MockedNavigator component={Anime} mocks={errorMock} />,
   );

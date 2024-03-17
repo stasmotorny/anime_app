@@ -24,6 +24,7 @@ export const SurfaceWithChips = (props: Props) => {
         {itemsArray.map(item => {
           return (
             <Chip
+              testID="chip"
               key={item}
               compact={true}
               {...(isDark && {style: {backgroundColor: Colors.black}})}
