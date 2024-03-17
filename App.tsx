@@ -29,6 +29,7 @@ const client = new ApolloClient({
     },
   }),
 });
+// rules test
 
 function App(): React.JSX.Element {
   const isLoggedIn = useReactiveVar(isUserAuthenticated);
