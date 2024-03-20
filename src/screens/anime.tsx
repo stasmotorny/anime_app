@@ -9,12 +9,14 @@ import {GlobalStyles} from '../globalStyles/globalStyles.ts';
 import {ScreenLoadingSpinner} from '../components/screenLoadingSpinner.tsx';
 import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
 import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
+import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
 export const Anime = (): React.JSX.Element => {
   const searchQuery = useReactiveVar(filterState);
+  const sortType = useReactiveVar(chosenSortType);
   const screen = useReactiveVar(currentScreen);
 
   const {data, loading, error} = useGetAnimeListQuery({
-    variables: updateQueryVariable(searchQuery),
+    variables: updateQueryVariable(searchQuery, sortType),
     skip: screen !== 'Anime',
   });
 

@@ -1,18 +1,20 @@
 import React from 'react';
 import {Chip, Surface, Text} from 'react-native-paper';
 import {StyleSheet} from 'react-native';
-import {MediaStatus} from '../API/__generated__/graphql.ts';
-import {statusTitles} from '../helpers/enumFormatters.ts';
+import {MediaSort, MediaStatus} from '../API/__generated__/graphql.ts';
+import {statusTitles, sortTypes} from '../helpers/enumFormatters.ts';
 import {GlobalStyles} from '../globalStyles/globalStyles.ts';
 import {Colors} from '../colors/colors.ts';
 
 type Props = {
-  itemsArray: string[];
+  itemsArray: string[] | MediaStatus[] | MediaSort[];
   onPress?: (item: string) => void;
   isSelectedCheckParameter: string | MediaStatus | null;
   title?: string;
   isDark?: boolean;
 };
+
+// TODO Add genres to genres list
 
 export const SurfaceWithChips = (props: Props) => {
   const {itemsArray, onPress, isSelectedCheckParameter, title, isDark} = props;
@@ -31,7 +33,7 @@ export const SurfaceWithChips = (props: Props) => {
               {...(isDark && {textStyle: {color: Colors.white}})}
               {...(onPress && {onPress: () => onPress(item)})}
               selected={item === isSelectedCheckParameter}>
-              {statusTitles[item] || item}
+              {sortTypes[item] || statusTitles[item] || item}
             </Chip>
           );
         })}

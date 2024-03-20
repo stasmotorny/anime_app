@@ -1,56 +1,49 @@
 import React from 'react';
-import {Button, Chip, Dialog, Portal, Surface, Text} from 'react-native-paper';
+import {Banner} from 'react-native-paper';
 import {MediaSort} from '../API/__generated__/graphql.ts';
+import {SurfaceWithChips} from './surfaceWithChips.tsx';
+import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
+import {useReactiveVar} from '@apollo/client';
 
 type Props = {
-  isDialogueVisible: boolean;
-  hideDialog: Function;
+  isBannerVisible: boolean;
+  hideBanner: () => void;
 };
 
 export const Sort = (props: Props) => {
-  const {isDialogueVisible, hideDialog} = props;
+  const {isBannerVisible, hideBanner} = props;
+  const chosen = useReactiveVar(chosenSortType);
 
   const sortParameter: MediaSort[] = [
     MediaSort.Score,
     MediaSort.ScoreDesc,
     MediaSort.StartDate,
     MediaSort.StartDateDesc,
+    MediaSort.Popularity,
+    MediaSort.PopularityDesc,
   ];
 
   return (
-    <Portal>
-      <Dialog visible={isDialogueVisible} onDismiss={() => hideDialog()}>
-        <Dialog.Title>Search</Dialog.Title>
-        <Dialog.Content>
-          <Surface elevation={0}>
-            <Text>Choose sort parameter:</Text>
-            <Surface
-              elevation={0}
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                paddingTop: 12,
-              }}>
-              {sortParameter.map(item => {
-                return (
-                  <Chip
-                    key={item}
-                    compact={true}
-                    onPress={() => {}}
-                    // selected={item === genre}
-                    style={{marginBottom: 8}}>
-                    {item}
-                  </Chip>
-                );
-              })}
-            </Surface>
-          </Surface>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={() => hideDialog()}>Done</Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+    <Banner
+      visible={isBannerVisible}
+      actions={[
+        {
+          label: 'Done',
+          onPress: () => hideBanner(),
+          mode: 'contained',
+          textColor: 'white',
+          style: {paddingHorizontal: 12},
+        },
+      ]}>
+      <SurfaceWithChips
+        isSelectedCheckParameter={chosen}
+        itemsArray={sortParameter}
+        title="Choose sort type:"
+        onPress={val => {
+          chosenSortType(val as MediaSort);
+        }}
+        isDark={false}
+      />
+    </Banner>
   );
 };
