@@ -1,4 +1,6 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
-  "module": "commonjs"
+  "compilerOptions": {
+    "module": "es2015"
+  },
 }

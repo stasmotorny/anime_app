@@ -19,10 +19,13 @@ import {
   initialFilterState,
 } from '../reactiveVariablesStore/filterState.ts';
 import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
+import {Sort} from '../components/sort.tsx';
 
 const PaperBottomNavigation = () => {
-  const [index, setIndex] = useState(0);
   const searchQuery = useReactiveVar(filterState);
+
+  const [index, setIndex] = useState(0);
+
   const [routes] = useState([
     {key: 'anime', title: 'Anime', focusedIcon: 'television'},
     {key: 'manga', title: 'Manga', focusedIcon: 'book-open-outline'},
@@ -34,6 +37,8 @@ const PaperBottomNavigation = () => {
   ]);
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  const [isSortVisible, setIsSortVisible] = useState(false);
 
   const renderScene = BottomNavigation.SceneMap({
     anime: Anime,
@@ -49,6 +54,11 @@ const PaperBottomNavigation = () => {
         <Appbar.Content
           title={routes[index].title}
           titleStyle={styles.appBarTitle}
+        />
+        <Appbar.Action
+          icon="sort"
+          onPress={() => setIsSortVisible(!isSortVisible)}
+          color={iconColor}
         />
         <Surface elevation={0}>
           <Badge
@@ -73,6 +83,12 @@ const PaperBottomNavigation = () => {
           color={iconColor}
         />
       </Appbar.Header>
+      <Sort
+        isBannerVisible={isSortVisible}
+        hideBanner={() => {
+          setIsSortVisible(false);
+        }}
+      />
       <BottomNavigation
         navigationState={{index, routes}}
         onIndexChange={val => {
