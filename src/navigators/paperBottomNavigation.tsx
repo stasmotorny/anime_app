@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   BottomNavigation,
   Appbar,
@@ -20,9 +20,21 @@ import {
 } from '../reactiveVariablesStore/filterState.ts';
 import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
 import {Sort} from '../components/sort.tsx';
+import firestore from '@react-native-firebase/firestore';
+import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
+import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
+
+type RenderSceneArgument = {
+  route: {
+    key: string;
+    title: string;
+    focusedIcon: string;
+  };
+};
 
 const PaperBottomNavigation = () => {
   const searchQuery = useReactiveVar(filterState);
+  const user = UserData();
 
   const [index, setIndex] = useState(0);
 
@@ -40,11 +52,44 @@ const PaperBottomNavigation = () => {
 
   const [isSortVisible, setIsSortVisible] = useState(false);
 
-  const renderScene = BottomNavigation.SceneMap({
-    anime: Anime,
-    manga: Manga,
-    collection: Collection,
-  });
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('userCollection')
+      .doc(user?.user.uid)
+      .onSnapshot(documentSnapshot => {
+        console.log('User data collection: ', documentSnapshot.data());
+        if (
+          documentSnapshot.data()?.collection &&
+          documentSnapshot.data()?.collection.length
+        ) {
+          userCollection(documentSnapshot.data()?.collection);
+        }
+      });
+
+    // Stop listening for updates when no longer required
+    return () => subscriber();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // const renderScene = BottomNavigation.SceneMap({
+  //   anime: Anime,
+  //   manga: Manga,
+  //   collection: Collection,
+  // });
+
+  const renderScene = ({route}: RenderSceneArgument) => {
+    if (routes[index].key !== route.key) {
+      return null;
+    }
+    switch (route.key) {
+      case 'anime':
+        return <Anime />;
+      case 'manga':
+        return <Manga />;
+      case 'collection':
+        return <Collection />;
+    }
+  };
 
   const iconColor = Colors.white;
 

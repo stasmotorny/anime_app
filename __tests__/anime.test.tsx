@@ -7,7 +7,7 @@ import {
 import {Anime} from '../src/screens/anime.tsx';
 import {it, expect} from '@jest/globals';
 import {MockedNavigator} from './__mocks__/mocks.tsx';
-import { currentScreen } from "../src/reactiveVariablesStore/currentScreen.ts";
+import {currentScreen} from '../src/reactiveVariablesStore/currentScreen.ts';
 
 const mocks = [
   {
