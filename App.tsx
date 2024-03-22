@@ -7,7 +7,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {StackParamList} from './src/types/navigation.ts';
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import {useReactiveVar} from '@apollo/client';
-import {isUserAuthenticated} from './src/reactiveVariablesStore/userAuthState.ts';
+import {UserData} from './src/reactiveVariablesStore/userAuthState.ts';
 import PaperBottomNavigation from './src/navigators/paperBottomNavigation.tsx';
 import {Details} from './src/screens/details.tsx';
 
@@ -32,7 +32,7 @@ const client = new ApolloClient({
 // rules test
 
 function App(): React.JSX.Element {
-  const isLoggedIn = useReactiveVar(isUserAuthenticated);
+  const isLoggedIn = useReactiveVar(UserData);
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>

@@ -10,10 +10,12 @@ import {ScreenLoadingSpinner} from '../components/screenLoadingSpinner.tsx';
 import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
 import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
 import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
+import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
 export const Anime = (): React.JSX.Element => {
   const searchQuery = useReactiveVar(filterState);
   const sortType = useReactiveVar(chosenSortType);
   const screen = useReactiveVar(currentScreen);
+  const userCollectionFromStore = useReactiveVar(userCollection);
 
   const {data, loading, error} = useGetAnimeListQuery({
     variables: updateQueryVariable(searchQuery, sortType),
@@ -24,16 +26,23 @@ export const Anime = (): React.JSX.Element => {
     return <ScreenLoadingSpinner />;
   }
 
-  if (error || !data?.Page?.media || !data?.Page?.media.length) {
+  if (error) {
     console.log(error);
     return <ScreenError />;
   }
 
-  return (
+  return !data?.Page?.media || !data?.Page?.media.length ? (
+    <ScreenError />
+  ) : (
     <View style={GlobalStyles.screenContainer}>
       <FlatList
         data={data?.Page?.media}
-        renderItem={({item}) => <ListItem item={item!} />}
+        renderItem={({item}) => (
+          <ListItem
+            item={item!}
+            isInCollection={userCollectionFromStore.includes(item!.id)}
+          />
+        )}
         style={GlobalStyles.screenFlatList}
       />
     </View>

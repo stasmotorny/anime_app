@@ -1,0 +1,42 @@
+query GetUserCollection(
+    $page: Int,
+    $perPage: Int,
+    $sortType: [MediaSort],
+    $name: String,
+    $genre: String,
+    $status: MediaStatus,
+    $startDate_greater: FuzzyDateInt,
+    $startDate_lesser: FuzzyDateInt,
+    $ids: [Int],
+) {
+    Page(
+        page: $page,
+        perPage: $perPage
+    ) {
+        media(
+            sort: $sortType,
+            search: $name,
+            genre: $genre,
+            status: $status,
+            startDate_greater: $startDate_greater,
+            startDate_lesser: $startDate_lesser,
+            id_in: $ids
+        ) {
+            id
+            type
+            title {
+                english
+            }
+            status
+            seasonYear
+            coverImage {
+                medium
+            }
+            bannerImage
+            genres
+            popularity
+            isFavourite
+            isFavouriteBlocked
+        }
+    }
+}

@@ -1,23 +1,11 @@
 import {jest} from '@jest/globals';
 
-// const mockFirebase = jest.fn(() => ({
-//   auth: () => ({
-//     createUserWithEmailAndPassword: jest.fn(),
-//     signInWithEmailAndPassword: jest.fn(),
-//     signOut: jest.fn(),
-//   }),
-// }));
-//
-// export default mockFirebase;
-
-const mockAuth = jest.fn(() => ({
-  createUserWithEmailAndPassword: jest.fn(),
-  signInWithEmailAndPassword: jest.fn(),
-  signOut: jest.fn(),
-}));
-
-const mockFirebase = jest.fn(() => ({
-  auth: mockAuth,
-}));
-
-export default mockFirebase;
+jest.mock('@react-native-firebase/firestore', () =>
+  jest.fn().mockReturnValue({
+    collection: jest.fn().mockReturnValue({
+      doc: jest.fn().mockReturnValue({
+        collection: [101922, 1535, 105778, 105398, 30002],
+      }),
+    }),
+  }),
+);

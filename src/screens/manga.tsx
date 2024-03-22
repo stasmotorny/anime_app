@@ -10,11 +10,13 @@ import {filterState} from '../reactiveVariablesStore/filterState.ts';
 import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
 import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
 import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
+import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
 
 export const Manga = () => {
   const searchQuery = useReactiveVar(filterState);
   const sortType = useReactiveVar(chosenSortType);
   const screen = useReactiveVar(currentScreen);
+  const userCollectionFromStore = useReactiveVar(userCollection);
 
   const {data, loading, error} = useGetMangaListQuery({
     variables: updateQueryVariable(searchQuery, sortType),
@@ -33,7 +35,12 @@ export const Manga = () => {
     <View style={GlobalStyles.screenContainer}>
       <FlatList
         data={data?.Page?.media}
-        renderItem={({item}) => <ListItem item={item!} />}
+        renderItem={({item}) => (
+          <ListItem
+            item={item!}
+            isInCollection={userCollectionFromStore.includes(item!.id)}
+          />
+        )}
         style={GlobalStyles.screenFlatList}
       />
     </View>

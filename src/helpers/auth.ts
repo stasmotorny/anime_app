@@ -1,6 +1,9 @@
 import auth from '@react-native-firebase/auth';
 import {Errors} from '../types/registrationErros.ts';
-import {isUserAuthenticated} from '../reactiveVariablesStore/userAuthState.ts';
+import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
+import firestore from '@react-native-firebase/firestore';
+
+// TODO add password reset functionality auth().sendPasswordResetEmail
 
 export const signupWithEmailAndPassword = (
   email: string,
@@ -9,9 +12,16 @@ export const signupWithEmailAndPassword = (
 ) => {
   auth()
     .createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      console.log('User account created & signed in!');
-      isUserAuthenticated(true);
+    .then(response => {
+      console.log('User account created & signed in!', response);
+      UserData(response);
+      firestore()
+        .collection('userCollection')
+        .doc(response.user.uid)
+        .set({collection: []})
+        .then(() => {
+          console.log('User added!');
+        });
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
@@ -45,7 +55,7 @@ export const loginWithEmailAndPassword = (
     .signInWithEmailAndPassword(email, password)
     .then(response => {
       console.log('User signed in!', response);
-      isUserAuthenticated(true);
+      UserData(response);
     })
     .catch(error => {
       console.log(error.code);
@@ -84,6 +94,6 @@ export const signOut = () => {
     .signOut()
     .then(() => {
       console.log('User signed out!');
-      isUserAuthenticated(false);
+      UserData(null);
     });
 };

@@ -58,6 +58,7 @@ export const Search = (props: Props) => {
 
   const debouncedChangeHandler = useMemo(
     () => debounce(changeHandler, 300),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 

@@ -4663,6 +4663,45 @@ export type GetMangaListQuery = {
   } | null;
 };
 
+export type GetUserCollectionQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['Int']['input']>;
+  perPage?: InputMaybe<Scalars['Int']['input']>;
+  sortType?: InputMaybe<Array<InputMaybe<MediaSort>> | InputMaybe<MediaSort>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  genre?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<MediaStatus>;
+  startDate_greater?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
+  startDate_lesser?: InputMaybe<Scalars['FuzzyDateInt']['input']>;
+  ids?: InputMaybe<
+    | Array<InputMaybe<Scalars['Int']['input']>>
+    | InputMaybe<Scalars['Int']['input']>
+  >;
+}>;
+
+export type GetUserCollectionQuery = {
+  __typename?: 'Query';
+  Page?: {
+    __typename?: 'Page';
+    media?: Array<{
+      __typename?: 'Media';
+      id: number;
+      type?: MediaType | null;
+      status?: MediaStatus | null;
+      seasonYear?: number | null;
+      bannerImage?: string | null;
+      genres?: Array<string | null> | null;
+      popularity?: number | null;
+      isFavourite: boolean;
+      isFavouriteBlocked: boolean;
+      title?: {__typename?: 'MediaTitle'; english?: string | null} | null;
+      coverImage?: {
+        __typename?: 'MediaCoverImage';
+        medium?: string | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
+
 export const GetAnimeListDocument = gql`
   query GetAnimeList(
     $page: Int
@@ -4985,4 +5024,119 @@ export type GetMangaListSuspenseQueryHookResult = ReturnType<
 export type GetMangaListQueryResult = Apollo.QueryResult<
   GetMangaListQuery,
   GetMangaListQueryVariables
+>;
+export const GetUserCollectionDocument = gql`
+  query GetUserCollection(
+    $page: Int
+    $perPage: Int
+    $sortType: [MediaSort]
+    $name: String
+    $genre: String
+    $status: MediaStatus
+    $startDate_greater: FuzzyDateInt
+    $startDate_lesser: FuzzyDateInt
+    $ids: [Int]
+  ) {
+    Page(page: $page, perPage: $perPage) {
+      media(
+        sort: $sortType
+        search: $name
+        genre: $genre
+        status: $status
+        startDate_greater: $startDate_greater
+        startDate_lesser: $startDate_lesser
+        id_in: $ids
+      ) {
+        id
+        type
+        title {
+          english
+        }
+        status
+        seasonYear
+        coverImage {
+          medium
+        }
+        bannerImage
+        genres
+        popularity
+        isFavourite
+        isFavouriteBlocked
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUserCollectionQuery__
+ *
+ * To run a query within a React component, call `useGetUserCollectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserCollectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserCollectionQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
+ *      sortType: // value for 'sortType'
+ *      name: // value for 'name'
+ *      genre: // value for 'genre'
+ *      status: // value for 'status'
+ *      startDate_greater: // value for 'startDate_greater'
+ *      startDate_lesser: // value for 'startDate_lesser'
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetUserCollectionQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetUserCollectionQuery,
+    GetUserCollectionQueryVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return ApolloReactHooks.useQuery<
+    GetUserCollectionQuery,
+    GetUserCollectionQueryVariables
+  >(GetUserCollectionDocument, options);
+}
+export function useGetUserCollectionLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetUserCollectionQuery,
+    GetUserCollectionQueryVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return ApolloReactHooks.useLazyQuery<
+    GetUserCollectionQuery,
+    GetUserCollectionQueryVariables
+  >(GetUserCollectionDocument, options);
+}
+export function useGetUserCollectionSuspenseQuery(
+  baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<
+    GetUserCollectionQuery,
+    GetUserCollectionQueryVariables
+  >,
+) {
+  const options = {...defaultOptions, ...baseOptions};
+  return ApolloReactHooks.useSuspenseQuery<
+    GetUserCollectionQuery,
+    GetUserCollectionQueryVariables
+  >(GetUserCollectionDocument, options);
+}
+export type GetUserCollectionQueryHookResult = ReturnType<
+  typeof useGetUserCollectionQuery
+>;
+export type GetUserCollectionLazyQueryHookResult = ReturnType<
+  typeof useGetUserCollectionLazyQuery
+>;
+export type GetUserCollectionSuspenseQueryHookResult = ReturnType<
+  typeof useGetUserCollectionSuspenseQuery
+>;
+export type GetUserCollectionQueryResult = Apollo.QueryResult<
+  GetUserCollectionQuery,
+  GetUserCollectionQueryVariables
 >;
