@@ -8,6 +8,7 @@ import {Anime} from '../src/screens/anime.tsx';
 import {it, expect} from '@jest/globals';
 import {MockedNavigator} from './__mocks__/mocks.tsx';
 import {currentScreen} from '../src/reactiveVariablesStore/currentScreen.ts';
+import {GraphQLError} from 'graphql/error';
 
 const mocks = [
   {
@@ -57,7 +58,7 @@ const errorMock = [
         sortType: MediaSort.PopularityDesc,
       },
     },
-    error: new Error('test error'),
+    error: new GraphQLError('test error'),
   },
 ];
 

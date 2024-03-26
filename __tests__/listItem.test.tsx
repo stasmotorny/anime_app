@@ -7,6 +7,7 @@ import {
   MediaStatus,
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
+import firestore from '@react-native-firebase/firestore';
 
 const item: Media = {
   id: 1,
@@ -75,4 +76,11 @@ it('should render add button', () => {
 it('should render remove button', () => {
   const wrapper = render(<ListItem item={item} isInCollection={true} />);
   expect(wrapper.getAllByText('Remove')).toHaveLength(1);
+});
+
+it('should update store on btn press', () => {
+  const wrapper = render(<ListItem item={item} isInCollection={false} />);
+  const addButton = wrapper.getByTestId('add_button');
+  fireEvent.press(addButton);
+  expect(firestore().collection().doc()).toContain(1);
 });

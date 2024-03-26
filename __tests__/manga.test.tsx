@@ -8,6 +8,7 @@ import {Manga} from '../src/screens/manga.tsx';
 import {it, expect} from '@jest/globals';
 import {MockedNavigator} from './__mocks__/mocks.tsx';
 import {currentScreen} from '../src/reactiveVariablesStore/currentScreen.ts';
+import {GraphQLError} from 'graphql/error';
 
 const mocks = [
   {
@@ -76,7 +77,7 @@ it('should display error message if there was an error on loading data', async (
           sortType: MediaSort.PopularityDesc,
         },
       },
-      error: new Error('test error'),
+      error: new GraphQLError('test error'),
     },
   ];
   currentScreen('Manga');
