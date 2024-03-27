@@ -51,17 +51,10 @@ export const ListItem = ({item, isInCollection}: Props) => {
           <Button
             testID="remove_button"
             onPress={() => {
-              console.log('ADD_BTN_PRESSED');
-              firebase
-                .update({
-                  collection: firestore.FieldValue.arrayRemove(item.id),
-                })
-                .then(response =>
-                  console.log('FIRESTORE_ITEM_WAS_REMOVED', response),
-                )
-                .catch(error =>
-                  console.error('FIRESTORE_REMOVE_ITEM_ERROR', error),
-                );
+              console.log('REMOVE_BTN_PRESSED');
+              firebase.update({
+                collection: firestore.FieldValue.arrayRemove(item.id),
+              });
             }}>
             Remove
           </Button>
@@ -72,16 +65,9 @@ export const ListItem = ({item, isInCollection}: Props) => {
             testID="add_button"
             onPress={() => {
               console.log('ADD_BTN_PRESSED');
-              firebase
-                .update({
-                  collection: firestore.FieldValue.arrayUnion(item.id),
-                })
-                .then(response =>
-                  console.log('FIRESTORE_ITEM_WAS_ADDED', response),
-                )
-                .catch(error =>
-                  console.error('FIRESTORE_ADD_ITEM_ERROR', error),
-                );
+              firebase.update({
+                collection: firestore.FieldValue.arrayUnion(item.id),
+              });
             }}>
             Add
           </Button>

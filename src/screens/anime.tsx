@@ -2,7 +2,6 @@ import React from 'react';
 import {Media, useGetAnimeListQuery} from '../API/__generated__/graphql.ts';
 import {useReactiveVar} from '@apollo/client';
 import {filterState} from '../reactiveVariablesStore/filterState.ts';
-import {ScreenError} from '../components/screenError.tsx';
 import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
 import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
 import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';

@@ -8,6 +8,7 @@ import {
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
 import firestore from '@react-native-firebase/firestore';
+import {UserData} from '../src/reactiveVariablesStore/userAuthState.ts';
 
 const item: Media = {
   id: 1,
@@ -33,7 +34,7 @@ const noTitleItem: Media = {
   title: {
     english: null,
   },
-  status: MediaStatus.Finished,
+  status: null,
   seasonYear: 1996,
   coverImage: {
     medium: 'some link',
@@ -52,6 +53,7 @@ jest.mock('@react-navigation/native', () => ({
     navigate: mockedNavigate,
   }),
 }));
+
 it('listItem navigation test', () => {
   const wrapper = render(<ListItem item={item} isInCollection={true} />);
   fireEvent.press(wrapper.getByTestId('item-card'));
@@ -61,11 +63,12 @@ it('listItem navigation test', () => {
 it('should render item title', () => {
   const wrapper = render(<ListItem item={item} isInCollection={true} />);
   expect(wrapper.getAllByText('Some title')).toHaveLength(1);
+  expect(wrapper.getAllByText('Finished')).toHaveLength(1);
 });
 
 it('should render unknown if theres no item title', () => {
   const wrapper = render(<ListItem item={noTitleItem} isInCollection={true} />);
-  expect(wrapper.getAllByText('Unknown')).toHaveLength(1);
+  expect(wrapper.getAllByText('Unknown')).toHaveLength(2);
 });
 
 it('should render add button', () => {
@@ -78,9 +81,22 @@ it('should render remove button', () => {
   expect(wrapper.getAllByText('Remove')).toHaveLength(1);
 });
 
-it('should update store on btn press', () => {
+jest.mock('@react-native-firebase/firestore');
+
+it('should update store on ADD btn press', () => {
   const wrapper = render(<ListItem item={item} isInCollection={false} />);
   const addButton = wrapper.getByTestId('add_button');
   fireEvent.press(addButton);
-  expect(firestore().collection().doc()).toContain(1);
+  expect(
+    firestore().collection('userCollection').doc('1').update,
+  ).toHaveBeenCalled();
+});
+
+it('should update store on REMOVE btn press', () => {
+  const wrapper = render(<ListItem item={item} isInCollection={true} />);
+  const addButton = wrapper.getByTestId('remove_button');
+  fireEvent.press(addButton);
+  expect(
+    firestore().collection('userCollection').doc('1').update,
+  ).toHaveBeenCalled();
 });

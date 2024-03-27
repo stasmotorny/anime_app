@@ -1,7 +1,33 @@
-import {Media, MediaSort} from '../API/__generated__/graphql.ts';
+import {
+  GetAnimeListQuery,
+  GetMangaListQuery,
+  Media,
+  MediaSort,
+} from '../API/__generated__/graphql.ts';
 import {updateQueryVariable} from './updateQueryVariable.ts';
 import {Filter} from '../types/filter.ts';
 import {FetchMoreType} from '../types/graphQL.ts';
+
+type CacheData = GetMangaListQuery | GetAnimeListQuery;
+
+export const cacheUpdateQuery = (
+  prev: CacheData,
+  {fetchMoreResult}: {fetchMoreResult: CacheData | null},
+) => {
+  if (!fetchMoreResult) {
+    return prev;
+  }
+  return {
+    ...prev,
+    Page: {
+      ...prev.Page,
+      media: [
+        ...(prev.Page?.media as Media[]),
+        ...(fetchMoreResult.Page?.media as Media[]),
+      ],
+    },
+  };
+};
 
 export const onLoadMore = (
   pageNumber: number,
@@ -14,20 +40,6 @@ export const onLoadMore = (
       ...updateQueryVariable(searchQuery, sortType),
       page: pageNumber,
     },
-    updateQuery: (prev, {fetchMoreResult}) => {
-      if (!fetchMoreResult) {
-        return prev;
-      }
-      return {
-        ...prev,
-        Page: {
-          ...prev.Page,
-          media: [
-            ...(prev.Page?.media as Media[]),
-            ...(fetchMoreResult.Page?.media as Media[]),
-          ],
-        },
-      };
-    },
+    updateQuery: cacheUpdateQuery,
   });
 };

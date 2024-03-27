@@ -14,7 +14,7 @@ import {onLoadMore} from '../helpers/loadNextPageOfQuery.ts';
 import {FetchMoreType} from '../types/graphQL.ts';
 
 type Props = {
-  fetchMore: FetchMoreType;
+  fetchMore?: FetchMoreType;
   loading?: boolean;
   error?: ApolloError;
   data?: Media[];
@@ -30,7 +30,7 @@ export const ScreenScroll = (props: Props) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (page > 1) {
+    if (page > 1 && fetchMore) {
       onLoadMore(page, fetchMore, searchQuery, sortType);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,6 +55,7 @@ export const ScreenScroll = (props: Props) => {
   return (
     <View style={GlobalStyles.screenContainer} testID="SCREEN_SCROLL">
       <FlashList
+        testID="flash_list"
         data={data ? data : []}
         renderItem={({item}) => (
           <ListItem

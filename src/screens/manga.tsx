@@ -1,6 +1,5 @@
 import React from 'react';
 import {Media, useGetMangaListQuery} from '../API/__generated__/graphql.ts';
-import {ScreenError} from '../components/screenError.tsx';
 import {useReactiveVar} from '@apollo/client';
 import {filterState} from '../reactiveVariablesStore/filterState.ts';
 import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
