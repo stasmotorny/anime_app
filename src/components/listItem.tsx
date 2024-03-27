@@ -10,13 +10,12 @@ import {statusTitles} from '../helpers/enumFormatters.ts';
 import firestore from '@react-native-firebase/firestore';
 import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
 
-export const ListItem = ({
-  item,
-  isInCollection,
-}: {
+type Props = {
   item: Media;
   isInCollection: boolean;
-}) => {
+};
+
+export const ListItem = ({item, isInCollection}: Props) => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const user = UserData();
   const firebase = firestore().collection('userCollection').doc(user?.user.uid);
@@ -50,18 +49,12 @@ export const ListItem = ({
       {isInCollection ? (
         <Card.Actions>
           <Button
+            testID="remove_button"
             onPress={() => {
-              console.log('ADD_BTN_PRESSED');
-              firebase
-                .update({
-                  collection: firestore.FieldValue.arrayRemove(item.id),
-                })
-                .then(response =>
-                  console.log('FIRESTORE_ITEM_WAS_REMOVED', response),
-                )
-                .catch(error =>
-                  console.error('FIRESTORE_REMOVE_ITEM_ERROR', error),
-                );
+              console.log('REMOVE_BTN_PRESSED');
+              firebase.update({
+                collection: firestore.FieldValue.arrayRemove(item.id),
+              });
             }}>
             Remove
           </Button>
@@ -69,18 +62,12 @@ export const ListItem = ({
       ) : (
         <Card.Actions>
           <Button
+            testID="add_button"
             onPress={() => {
               console.log('ADD_BTN_PRESSED');
-              firebase
-                .update({
-                  collection: firestore.FieldValue.arrayUnion(item.id),
-                })
-                .then(response =>
-                  console.log('FIRESTORE_ITEM_WAS_ADDED', response),
-                )
-                .catch(error =>
-                  console.error('FIRESTORE_ADD_ITEM_ERROR', error),
-                );
+              firebase.update({
+                collection: firestore.FieldValue.arrayUnion(item.id),
+              });
             }}>
             Add
           </Button>

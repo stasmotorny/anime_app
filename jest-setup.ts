@@ -2,6 +2,8 @@ import '@testing-library/react-native/extend-expect';
 import {jest} from '@jest/globals';
 import 'react-native-gesture-handler/jestSetup';
 
+require('@shopify/flash-list/jestSetup');
+
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
 // jest.mock('react-native-reanimated', () => {

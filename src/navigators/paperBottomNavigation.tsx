@@ -147,6 +147,7 @@ const PaperBottomNavigation = () => {
         barStyle={styles.bar}
         activeColor={iconColor}
         activeIndicatorStyle={styles.activeIndicator}
+        // style={{paddingHorizontal: 12}}
       />
       <Search
         isDialogueVisible={isSearchVisible}
