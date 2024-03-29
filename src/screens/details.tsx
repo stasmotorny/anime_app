@@ -22,10 +22,6 @@ export const Details = (props: Props) => {
     },
   });
 
-  useEffect(() => {
-    console.log('NEXT_EPISODE', data?.Media?.nextAiringEpisode);
-  }, [data]);
-
   if (loading) {
     return (
       <ActivityIndicator

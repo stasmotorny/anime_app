@@ -78,7 +78,7 @@ const mocksWithNull = [
             large: 'some link',
           },
           title: {
-            english: 'Epic adventure',
+            english: null,
           },
           genres: ['comedy', 'drama'],
           averageScore: null,
@@ -141,9 +141,8 @@ it('renders without error', async () => {
     expect(wrapper.queryByTestId('image-gradient')).toBeTruthy(),
     expect(wrapper.queryByTestId('genres-card')).toBeTruthy(),
     expect(wrapper.queryByTestId('card-rating')).toBeTruthy(),
-    expect(wrapper.queryByTestId('relations-card')).toBeTruthy(),
+    expect(wrapper.queryByTestId('relations-accordion')).toBeTruthy(),
     expect(wrapper.queryByTestId('description-card')).toBeTruthy(),
-    expect(wrapper.getAllByTestId('related-item')).toHaveLength(2),
   ]);
 });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {render} from '@testing-library/react-native';
+import {fireEvent, render} from '@testing-library/react-native';
 import {it, expect} from '@jest/globals';
 import {RelationsList} from '../src/components/relationsList.tsx';
 import {
@@ -56,6 +56,8 @@ it('renders two items if theres two items in data', () => {
     return <RelationsList data={items} />;
   };
   const wrapper = render(<MockedNavigator component={ComponentWithProps} />);
+  const accordion = wrapper.getByTestId('relations-accordion');
+  fireEvent.press(accordion);
   expect(wrapper.getAllByTestId('related-item')).toHaveLength(2);
 });
 
@@ -64,5 +66,7 @@ it('renders two items if theres two items and null in data', () => {
     return <RelationsList data={[...items, null]} />;
   };
   const wrapper = render(<MockedNavigator component={ComponentWithProps} />);
+  const accordion = wrapper.getByTestId('relations-accordion');
+  fireEvent.press(accordion);
   expect(wrapper.getAllByTestId('related-item')).toHaveLength(2);
 });

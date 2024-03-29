@@ -17,6 +17,7 @@ export const RelationsList = (props: Props) => {
       <Card.Content>
         {typeof relations !== 'string' ? (
           <List.Accordion
+            testID="relations-accordion"
             title="Relations:"
             titleStyle={{...GlobalStyles.detailsCardTitleText}}
             right={(props: {isExpanded: boolean}) =>
