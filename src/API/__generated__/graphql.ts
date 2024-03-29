@@ -4698,6 +4698,12 @@ export type GetUserCollectionQuery = {
         __typename?: 'MediaCoverImage';
         medium?: string | null;
       } | null;
+      nextAiringEpisode?: {
+        __typename?: 'AiringSchedule';
+        id: number;
+        airingAt: number;
+        episode: number;
+      } | null;
     } | null> | null;
   } | null;
 };
@@ -5062,6 +5068,11 @@ export const GetUserCollectionDocument = gql`
         popularity
         isFavourite
         isFavouriteBlocked
+        nextAiringEpisode {
+          id
+          airingAt
+          episode
+        }
       }
     }
   }

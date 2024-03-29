@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, ActivityIndicator} from 'react-native-paper';
 import {StackParamList} from '../types/navigation.ts';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -21,6 +21,10 @@ export const Details = (props: Props) => {
       id: itemId,
     },
   });
+
+  useEffect(() => {
+    console.log('NEXT_EPISODE', data?.Media?.nextAiringEpisode);
+  }, [data]);
 
   if (loading) {
     return (
