@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Text, ActivityIndicator} from 'react-native-paper';
 import {StackParamList} from '../types/navigation.ts';
 import {StackScreenProps} from '@react-navigation/stack';
