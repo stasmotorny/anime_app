@@ -27,6 +27,10 @@ export const ScreenScroll = (props: Props) => {
   const sortType = useReactiveVar(chosenSortType);
   const userCollectionFromStore = useReactiveVar(userCollection);
 
+  useEffect(() => {
+    console.log('STORE_USER_COLLECTION', userCollectionFromStore);
+  }, [userCollectionFromStore]);
+
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -63,6 +67,7 @@ export const ScreenScroll = (props: Props) => {
             isInCollection={userCollectionFromStore.includes(item!.id)}
           />
         )}
+        extraData={userCollectionFromStore}
         estimatedItemSize={144}
         showsVerticalScrollIndicator={false}
         onEndReachedThreshold={0.9}

@@ -11,7 +11,7 @@ import {
 } from '../src/API/__generated__/graphql.ts';
 import {FetchMoreType} from '../src/types/graphQL.ts';
 
-it('renders without error', async () => {
+it('onLoadMore should call fetchmore once onEndReached', async () => {
   const fetchMoreMock = jest.fn();
   const searchQueryMock = {
     name: 'Test name',
@@ -29,7 +29,7 @@ it('renders without error', async () => {
   expect(fetchMoreMock).toHaveBeenCalledTimes(1);
 });
 
-it('renders without error', async () => {
+it('cacheUpdateQuery should concat prev and new Media or return prev Media if thres no new', async () => {
   const previousMangaListQueryMock = {
     __typename: 'Query',
     Page: {

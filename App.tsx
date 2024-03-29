@@ -11,6 +11,7 @@ import {UserData} from './src/reactiveVariablesStore/userAuthState.ts';
 import PaperBottomNavigation from './src/navigators/paperBottomNavigation.tsx';
 import {Details} from './src/screens/details.tsx';
 import 'react-native-devsettings';
+import {Calendar} from './src/screens/calendar.tsx';
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -54,6 +55,7 @@ function App(): React.JSX.Element {
                 component={Details}
                 options={{headerShown: true}}
               />
+              <Stack.Screen name="Calendar" component={Calendar} />
             </Stack.Group>
           )}
         </Stack.Navigator>

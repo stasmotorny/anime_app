@@ -8,7 +8,6 @@ import {
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
 import firestore from '@react-native-firebase/firestore';
-import {UserData} from '../src/reactiveVariablesStore/userAuthState.ts';
 
 const item: Media = {
   id: 1,
