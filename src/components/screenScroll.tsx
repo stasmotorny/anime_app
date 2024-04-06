@@ -52,7 +52,7 @@ export const ScreenScroll = (props: Props) => {
   }
 
   if (error) {
-    console.log(error.message);
+    console.log('GraphQL error', error);
     return <ScreenError />;
   }
 

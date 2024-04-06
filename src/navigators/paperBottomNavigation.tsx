@@ -22,7 +22,7 @@ import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
 import {Sort} from '../components/sort.tsx';
 import firestore from '@react-native-firebase/firestore';
 import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 type RenderSceneArgument = {
   route: {
@@ -34,7 +34,6 @@ type RenderSceneArgument = {
 
 const PaperBottomNavigation = () => {
   const searchQuery = useReactiveVar(filterState);
-  const user = UserData();
 
   const [index, setIndex] = useState(0);
 
@@ -52,22 +51,29 @@ const PaperBottomNavigation = () => {
 
   const [isSortVisible, setIsSortVisible] = useState(false);
 
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection('userCollection')
-      .doc(user?.user.uid)
-      .onSnapshot(documentSnapshot => {
-        console.log('User data collection: ', documentSnapshot.data());
-        if (
-          documentSnapshot.data()?.collection &&
-          documentSnapshot.data()?.collection.length
-        ) {
-          userCollection(documentSnapshot.data()?.collection);
-        }
-      });
+  let firestoreSubscriber: () => void;
 
-    // Stop listening for updates when no longer required
-    return () => subscriber();
+  const onAuthStateChanged = (firebaseUser: FirebaseAuthTypes.User | null) => {
+    if (firebaseUser && firebaseUser.uid) {
+      firestoreSubscriber = firestore()
+        .collection('userCollection')
+        .doc(firebaseUser.uid)
+        .onSnapshot(
+          documentSnapshot => {
+            userCollection(documentSnapshot.data()!.collection);
+          },
+          error => console.error(error),
+        );
+    }
+
+    if (!firebaseUser && firestoreSubscriber) {
+      firestoreSubscriber();
+    }
+  };
+
+  useEffect(() => {
+    const authSubscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return authSubscriber;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

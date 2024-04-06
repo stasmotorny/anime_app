@@ -36,6 +36,15 @@ query GetMangaList(
             popularity
             isFavourite
             isFavouriteBlocked
+            relations {
+                nodes {
+                    id
+                    title {
+                        english
+                    }
+                    type
+                }
+            }
         }
     }
 }
