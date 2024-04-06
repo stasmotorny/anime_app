@@ -1,7 +1,7 @@
 import {Media} from '../API/__generated__/graphql.ts';
-import {Button, Card, Text} from 'react-native-paper';
+import {Button, Card, Text, Dialog, Portal} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackParamList} from '../types/navigation.ts';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -17,8 +17,38 @@ type Props = {
 
 export const ListItem = ({item, isInCollection}: Props) => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
+  const [isVisible, setIsVisible] = useState(false);
+
   const user = UserData();
+  // console.log('USER', user);
   const firebase = firestore().collection('userCollection').doc(user?.user.uid);
+
+  const addRelatedItemsDialogue = (relatedItems: Media[]) => {
+    // data?.Media?.relations?.nodes
+    if (relatedItems) {
+      setIsVisible(true);
+    } else {
+      firebase.update({
+        collection: firestore.FieldValue.arrayUnion(item.id),
+      });
+    }
+  };
+
+  const onAddRelatedItems = () => {
+    if (item.relations?.nodes) {
+      navigation.navigate('Choose_related_items', {
+        relatedItems: item.relations.nodes as Media[],
+        mainItemId: item.id,
+      });
+    }
+  };
+
+  const onRefuseToAddRelatedItems = () => {
+    firebase.update({
+      collection: firestore.FieldValue.arrayUnion(item.id),
+    });
+    setIsVisible(false);
+  };
 
   return (
     <Card
@@ -65,14 +95,43 @@ export const ListItem = ({item, isInCollection}: Props) => {
             testID="add_button"
             onPress={() => {
               console.log('ADD_BTN_PRESSED');
-              firebase.update({
-                collection: firestore.FieldValue.arrayUnion(item.id),
-              });
+              addRelatedItemsDialogue(item.relations?.nodes as Media[]);
+              setIsVisible(true);
             }}>
             Add
           </Button>
         </Card.Actions>
       )}
+      <Portal>
+        <Dialog
+          visible={isVisible}
+          onDismiss={() => {
+            setIsVisible(false);
+          }}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">{`${
+              item.title?.english || 'This item'
+            } has related animes and mangas do you want to add them too?`}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                onAddRelatedItems();
+                setIsVisible(false);
+              }}>
+              Yes
+            </Button>
+            <Button
+              onPress={() => {
+                onRefuseToAddRelatedItems();
+                setIsVisible(false);
+              }}>
+              No
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </Card>
   );
 };

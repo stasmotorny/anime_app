@@ -12,6 +12,7 @@ import PaperBottomNavigation from './src/navigators/paperBottomNavigation.tsx';
 import {Details} from './src/screens/details.tsx';
 import 'react-native-devsettings';
 import {Calendar} from './src/screens/calendar.tsx';
+import {RelatedItemsChoice} from './src/screens/relatedItemsChoice.tsx';
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -56,6 +57,13 @@ function App(): React.JSX.Element {
                 options={{headerShown: true}}
               />
               <Stack.Screen name="Calendar" component={Calendar} />
+              <Stack.Screen
+                name="Choose_related_items"
+                component={RelatedItemsChoice}
+                options={{
+                  title: 'Choose related items',
+                }}
+              />
             </Stack.Group>
           )}
         </Stack.Navigator>

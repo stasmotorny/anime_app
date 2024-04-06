@@ -8,6 +8,7 @@ import {
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
 import {FetchMoreType} from '../src/types/graphQL.ts';
+import {Provider} from 'react-native-paper';
 
 const data: Media[] = [
   {
@@ -192,9 +193,14 @@ jest.mock('@react-navigation/native', () => ({
 
 it('Should increase page on scroll reached end', () => {
   const fetchMore = jest.fn();
-  const wrapper = render(
-    <ScreenScroll fetchMore={fetchMore as FetchMoreType} data={data} />,
-  );
+  const ScrollWrappedWithProvider = () => {
+    return (
+      <Provider>
+        <ScreenScroll fetchMore={fetchMore as FetchMoreType} data={data} />
+      </Provider>
+    );
+  };
+  const wrapper = render(<ScrollWrappedWithProvider />);
   const flashlist = wrapper.getByTestId('flash_list');
   fireEvent.scroll(flashlist);
   expect(fetchMore).toHaveBeenCalledTimes(1);
