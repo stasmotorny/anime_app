@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Text, ActivityIndicator} from 'react-native-paper';
 import {StackParamList} from '../types/navigation.ts';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -10,7 +10,6 @@ import {GenresList} from '../components/genresList.tsx';
 import {RatingBlock} from '../components/ratingBlock.tsx';
 import {Description} from '../components/description.tsx';
 import {GradientImageWithText} from '../components/gradientImageWithText.tsx';
-import YoutubePlayer from 'react-native-youtube-iframe';
 import {YoutubeTrailer} from '../components/youtubeTrailer.tsx';
 
 type Props = StackScreenProps<StackParamList, 'Details'>;
