@@ -10,6 +10,7 @@ import {GenresList} from '../components/genresList.tsx';
 import {RatingBlock} from '../components/ratingBlock.tsx';
 import {Description} from '../components/description.tsx';
 import {GradientImageWithText} from '../components/gradientImageWithText.tsx';
+import {YoutubeTrailer} from '../components/youtubeTrailer.tsx';
 
 type Props = StackScreenProps<StackParamList, 'Details'>;
 
@@ -52,6 +53,9 @@ export const Details = (props: Props) => {
         title={data?.Media?.title?.english}
       />
       <GenresList data={data?.Media?.genres} />
+      {data.Media.trailer?.site === 'youtube' && data.Media.trailer.id ? (
+        <YoutubeTrailer id={data.Media.trailer.id} />
+      ) : null}
       <RatingBlock
         score={
           data?.Media?.averageScore

@@ -16,7 +16,7 @@ const mocks = [
     result: {
       data: {
         Media: {
-          description: 'Best iten in the world',
+          description: 'Best item in the world',
           coverImage: {
             large: 'some link',
           },
