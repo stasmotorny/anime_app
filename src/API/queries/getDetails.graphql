@@ -22,6 +22,11 @@ query GetDetails($id: Int) {
                 isFavouriteBlocked
             }
         }
+        trailer {
+            id
+            site
+            thumbnail
+        }
         nextAiringEpisode {
             id
             airingAt
