@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Media, MediaType} from '../API/__generated__/graphql.ts';
 import {List, Chip, Divider, Button, Surface} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {StackParamList} from '../types/navigation.ts';
@@ -8,11 +7,8 @@ import firestore from '@react-native-firebase/firestore';
 import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
 import {useReactiveVar} from '@apollo/client';
 import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
-
-type GroupedItems = {
-  anime: Media[];
-  manga: Media[];
-};
+import {GroupedItems} from '../types/groupedItems.ts';
+import {groupItems} from '../helpers/groupingItems.ts';
 
 type Props = StackScreenProps<StackParamList, 'Choose_related_items'>;
 
@@ -29,25 +25,9 @@ export const RelatedItemsChoice = (props: Props) => {
   const [selected, setSelected] = useState<number[]>([mainItemId]);
 
   useEffect(() => {
-    groupItems(relatedItems);
+    // @ts-ignore
+    setGroupedItems(groupItems(relatedItems));
   }, [relatedItems]);
-
-  const groupItems = (items: Media[]) => {
-    let groupedItemsObject: GroupedItems = {
-      anime: [],
-      manga: [],
-    };
-
-    items.forEach(item => {
-      if (item.type === MediaType.Manga) {
-        groupedItemsObject.manga.push(item);
-      }
-      if (item.type === MediaType.Anime) {
-        groupedItemsObject.anime.push(item);
-      }
-    });
-    setGroupedItems(groupedItemsObject);
-  };
 
   const onChipPress = (isSelected: boolean, itemId: number) => {
     if (isSelected) {
