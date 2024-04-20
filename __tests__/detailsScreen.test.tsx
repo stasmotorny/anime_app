@@ -51,6 +51,12 @@ const mocks = [
               },
             ],
           },
+          trailer: {
+            id: 'wwKZYTsxIhk',
+            site: 'youtube',
+            thumbnail: 'https://i.ytimg.com/vi/wwKZYTsxIhk/hqdefault.jpg',
+          },
+          // trailer: undefined,
           nextAiringEpisode: {
             id: 1,
             airingAt: '2021-03-02',
@@ -108,6 +114,12 @@ const mocksWithNull = [
               },
             ],
           },
+          trailer: {
+            id: 'wwKZYTsxIhk',
+            site: 'youtube',
+            thumbnail: 'https://i.ytimg.com/vi/wwKZYTsxIhk/hqdefault.jpg',
+          },
+          // trailer: undefined,
           nextAiringEpisode: {
             id: 1,
             airingAt: '2021-03-02',

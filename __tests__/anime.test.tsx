@@ -40,6 +40,24 @@ const mocks = [
               popularity: 86,
               isFavourite: true,
               isFavouriteBlocked: false,
+              relations: {
+                nodes: [
+                  {
+                    id: 1,
+                    title: {
+                      english: 'Some title 1',
+                    },
+                    type: 'ANIME',
+                  },
+                  {
+                    id: 2,
+                    title: {
+                      english: 'Some title 2',
+                    },
+                    type: 'ANIME',
+                  },
+                ],
+              },
             },
           ],
         },

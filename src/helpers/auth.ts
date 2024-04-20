@@ -21,7 +21,8 @@ export const signupWithEmailAndPassword = (
         .set({collection: []})
         .then(() => {
           console.log('User added!');
-        });
+        })
+        .catch(err => console.log('CREATE_NEW_COLLECTION_ERROR', err));
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {

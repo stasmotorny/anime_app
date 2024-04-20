@@ -57,6 +57,7 @@ export const Calendar = (props: Props) => {
 
   return (
     <Agenda
+      // @ts-ignore
       items={items}
       selected={findNearestDate(Object.keys(items))}
       renderItem={renderItem}

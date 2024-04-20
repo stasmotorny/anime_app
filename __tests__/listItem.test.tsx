@@ -8,9 +8,9 @@ import {
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
 import firestore from '@react-native-firebase/firestore';
-import {UserData} from '../src/reactiveVariablesStore/userAuthState.ts';
-import {mockReactNativeFirestore} from 'firestore-jest-mock';
 import {Provider} from 'react-native-paper';
+
+jest.useFakeTimers();
 
 const item: Media = {
   id: 1,
@@ -99,11 +99,6 @@ jest.mock('@react-navigation/native', () => ({
 // });
 
 it('listItem navigation test', () => {
-  // const TruthyListItem = () => {
-  //   return (
-  //     <ListItem item={item} isInCollection={true} />
-  //   );
-  // };
   const wrapper = render(WrapWithProvider(TruthyListItem));
   fireEvent.press(wrapper.getByTestId('item-card'));
   expect(mockedNavigate).toHaveBeenCalledWith('Details', {itemId: item.id});
@@ -136,13 +131,6 @@ it('should render remove button', () => {
 jest.mock('@react-native-firebase/firestore');
 
 it('should update store on ADD btn press', () => {
-  const ComponentWrappedWithProvider = () => {
-    return (
-      <Provider>
-        <ListItem item={item} isInCollection={false} />
-      </Provider>
-    );
-  };
   const wrapper = render(WrapWithProvider(FalsyListItem));
   const addButton = wrapper.getByTestId('add_button');
   fireEvent.press(addButton);

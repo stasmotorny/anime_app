@@ -10,6 +10,8 @@ jest.mock('react-native-webview', () => ({
   default: () => jest.fn(), // or any mocked component instead of native view,
 }));
 
+jest.mock('react-native-youtube-iframe', () => 'YoutubePlayer');
+
 // jest.mock('react-native-reanimated', () => {
 //   const Reanimated = require('react-native-reanimated/mock');
 //

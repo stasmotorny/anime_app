@@ -53,7 +53,9 @@ export const Details = (props: Props) => {
         title={data?.Media?.title?.english}
       />
       <GenresList data={data?.Media?.genres} />
-      {data.Media.trailer?.site === 'youtube' && data.Media.trailer.id ? (
+      {data.Media.trailer &&
+      data.Media.trailer?.site === 'youtube' &&
+      data.Media.trailer.id ? (
         <YoutubeTrailer id={data.Media.trailer.id} />
       ) : null}
       <RatingBlock
