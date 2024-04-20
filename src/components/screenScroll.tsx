@@ -64,7 +64,9 @@ export const ScreenScroll = (props: Props) => {
         renderItem={({item}) => (
           <ListItem
             item={item!}
-            isInCollection={userCollectionFromStore.includes(item!.id)}
+            isInCollection={userCollectionFromStore.some(
+              collectionItem => collectionItem.itemId === item.id,
+            )}
           />
         )}
         extraData={userCollectionFromStore}

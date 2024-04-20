@@ -10,6 +10,8 @@ import {
 import {FetchMoreType} from '../src/types/graphQL.ts';
 import {Provider} from 'react-native-paper';
 
+jest.useFakeTimers();
+
 const data: Media[] = [
   {
     id: 1,

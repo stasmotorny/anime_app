@@ -1,5 +1,5 @@
 import {Media} from '../API/__generated__/graphql.ts';
-import {Button, Card, Text, Dialog, Portal} from 'react-native-paper';
+import {Button, Card, Text} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -7,8 +7,14 @@ import {StackParamList} from '../types/navigation.ts';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Colors} from '../colors/colors.ts';
 import {statusTitles} from '../helpers/enumFormatters.ts';
-import firestore from '@react-native-firebase/firestore';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
+import {useReactiveVar} from '@apollo/client';
+import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
+import {
+  addNewItemToDB,
+  removeItemFromDB,
+} from '../reactiveVariablesStore/userCollection.ts';
+import {AddRelatedItemsDialogue} from './addRelatedItemsDialogue.tsx';
+import {ChangeGroupDialogue} from './changeGroupDialogue.tsx';
 
 type Props = {
   item: Media;
@@ -16,44 +22,29 @@ type Props = {
 };
 
 export const ListItem = ({item, isInCollection}: Props) => {
+  const screen = useReactiveVar(currentScreen);
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const [isVisible, setIsVisible] = useState(false);
-
-  const user = UserData();
-  // console.log('USER', user);
-  const firebase = firestore().collection('userCollection').doc(user?.user.uid);
+  const [isGroupChangeVisible, setIsGroupChangeVisible] = useState(false);
 
   const addRelatedItemsDialogue = (relatedItems: Media[]) => {
-    // data?.Media?.relations?.nodes
     if (relatedItems) {
       setIsVisible(true);
     } else {
-      firebase.update({
-        collection: firestore.FieldValue.arrayUnion(item.id),
+      addNewItemToDB({
+        itemId: item.id,
+        itemGroup: item.type!,
       });
     }
-  };
-
-  const onAddRelatedItems = () => {
-    if (item.relations?.nodes) {
-      navigation.navigate('Choose_related_items', {
-        relatedItems: item.relations.nodes as Media[],
-        mainItemId: item.id,
-      });
-    }
-  };
-
-  const onRefuseToAddRelatedItems = () => {
-    firebase.update({
-      collection: firestore.FieldValue.arrayUnion(item.id),
-    });
-    setIsVisible(false);
   };
 
   return (
     <Card
       testID="item-card"
       onPress={() => navigation.navigate('Details', {itemId: item.id})}
+      onLongPress={() => {
+        screen === 'Collection' ? setIsGroupChangeVisible(true) : null;
+      }}
       contentStyle={styles.cardContent}
       style={styles.card}>
       <Card.Cover
@@ -81,10 +72,7 @@ export const ListItem = ({item, isInCollection}: Props) => {
           <Button
             testID="remove_button"
             onPress={() => {
-              console.log('REMOVE_BTN_PRESSED');
-              firebase.update({
-                collection: firestore.FieldValue.arrayRemove(item.id),
-              });
+              removeItemFromDB(item.id);
             }}>
             Remove
           </Button>
@@ -94,7 +82,6 @@ export const ListItem = ({item, isInCollection}: Props) => {
           <Button
             testID="add_button"
             onPress={() => {
-              console.log('ADD_BTN_PRESSED');
               addRelatedItemsDialogue(item.relations?.nodes as Media[]);
               setIsVisible(true);
             }}>
@@ -102,36 +89,16 @@ export const ListItem = ({item, isInCollection}: Props) => {
           </Button>
         </Card.Actions>
       )}
-      <Portal>
-        <Dialog
-          visible={isVisible}
-          onDismiss={() => {
-            setIsVisible(false);
-          }}>
-          <Dialog.Title>Alert</Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">{`${
-              item.title?.english || 'This item'
-            } has related animes and mangas do you want to add them too?`}</Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button
-              onPress={() => {
-                onAddRelatedItems();
-                setIsVisible(false);
-              }}>
-              Yes
-            </Button>
-            <Button
-              onPress={() => {
-                onRefuseToAddRelatedItems();
-                setIsVisible(false);
-              }}>
-              No
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <AddRelatedItemsDialogue
+        isVisible={isVisible}
+        item={item}
+        setIsVisible={setIsVisible}
+      />
+      <ChangeGroupDialogue
+        isVisible={isGroupChangeVisible}
+        setIsVisible={setIsGroupChangeVisible}
+        itemId={item.id}
+      />
     </Card>
   );
 };

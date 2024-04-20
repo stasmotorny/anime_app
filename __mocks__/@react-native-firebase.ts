@@ -5,14 +5,14 @@ jest.mock('@react-native-firebase/firestore', () => {
     collection: jest.fn().mockReturnValue({
       doc: jest.fn().mockReturnValue({
         collection: [101922, 1535, 105778, 105398, 30002],
-        update: jest.fn(),
+        update: jest.fn(() => Promise.resolve('Success')),
       }),
     }),
   });
 
   mockFirestore.FieldValue = {
-    arrayUnion: jest.fn(),
-    arrayRemove: jest.fn(),
+    arrayUnion: jest.fn(() => Promise.resolve('Success')),
+    arrayRemove: jest.fn(() => Promise.resolve('Success')),
   };
 
   return mockFirestore;

@@ -1,39 +1,44 @@
 import React, {useEffect, useState} from 'react';
 import {List, Chip, Divider, Button, Surface} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
-import {StackParamList} from '../types/navigation.ts';
+import {CollectionItem, StackParamList} from '../types/navigation.ts';
 import {ScrollView, StyleSheet} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
 import {useReactiveVar} from '@apollo/client';
-import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
+import {
+  addNewItemToDB,
+  userCollection,
+} from '../reactiveVariablesStore/userCollection.ts';
 import {GroupedItems} from '../types/groupedItems.ts';
 import {groupItems} from '../helpers/groupingItems.ts';
 
 type Props = StackScreenProps<StackParamList, 'Choose_related_items'>;
 
 export const RelatedItemsChoice = (props: Props) => {
-  const user = UserData();
   const collection = useReactiveVar(userCollection);
-  const firebase = firestore().collection('userCollection').doc(user?.user.uid);
-  const {relatedItems, mainItemId} = props.route.params;
+
+  const {relatedItems, mainItem} = props.route.params;
   const navigation = props.navigation;
+
   const [groupedItems, setGroupedItems] = useState<GroupedItems>({
     anime: [],
     manga: [],
   });
-  const [selected, setSelected] = useState<number[]>([mainItemId]);
+  const [selected, setSelected] = useState<CollectionItem[]>([mainItem]);
 
   useEffect(() => {
     // @ts-ignore
     setGroupedItems(groupItems(relatedItems));
   }, [relatedItems]);
 
-  const onChipPress = (isSelected: boolean, itemId: number) => {
+  const onChipPress = (
+    isSelected: boolean,
+    itemId: number,
+    itemGroup: string,
+  ) => {
     if (isSelected) {
-      setSelected(selected.filter(item => item !== itemId));
+      setSelected(selected.filter(item => item.itemId !== itemId));
     } else {
-      setSelected([...selected, itemId]);
+      setSelected([...selected, {itemId: itemId, itemGroup: itemGroup}]);
     }
   };
 
@@ -42,14 +47,26 @@ export const RelatedItemsChoice = (props: Props) => {
       <ScrollView style={styles.scrollView}>
         <List.Accordion title="Anime" id="1">
           {groupedItems.anime.map(item => {
-            if (!collection.includes(item.id)) {
+            if (
+              !collection.some(
+                collectionItem => item.id === collectionItem.itemId,
+              )
+            ) {
               return (
                 <Chip
                   key={item.id}
                   style={styles.chip}
-                  selected={selected.includes(item.id)}
+                  selected={selected.some(
+                    selectedItem => item.id === selectedItem.itemId,
+                  )}
                   onPress={() => {
-                    onChipPress(selected.includes(item.id), item.id);
+                    onChipPress(
+                      selected.some(
+                        selectedItem => item.id === selectedItem.itemId,
+                      ),
+                      item.id,
+                      item.type!,
+                    );
                   }}>
                   {item.title?.english || 'Unknown'}
                 </Chip>
@@ -60,14 +77,26 @@ export const RelatedItemsChoice = (props: Props) => {
         <Divider style={styles.divider} />
         <List.Accordion title="Manga" id="2">
           {groupedItems.manga.map(item => {
-            if (!collection.includes(item.id)) {
+            if (
+              !collection.some(
+                collectionItem => item.id === collectionItem.itemId,
+              )
+            ) {
               return (
                 <Chip
                   key={item.id}
                   style={styles.chip}
-                  selected={selected.includes(item.id)}
+                  selected={selected.some(
+                    selectedItem => item.id === selectedItem.itemId,
+                  )}
                   onPress={() => {
-                    onChipPress(selected.includes(item.id), item.id);
+                    onChipPress(
+                      selected.some(
+                        selectedItem => selectedItem.itemId === item.id,
+                      ),
+                      item.id,
+                      item.type!,
+                    );
                   }}>
                   {item.title?.english || 'Unknown'}
                 </Chip>
@@ -82,9 +111,7 @@ export const RelatedItemsChoice = (props: Props) => {
           disabled={selected.length === 1}
           style={styles.button}
           onPress={() => {
-            firebase.update({
-              collection: firestore.FieldValue.arrayUnion(...selected),
-            });
+            addNewItemToDB(selected);
             navigation.goBack();
           }}>
           Add
@@ -93,9 +120,7 @@ export const RelatedItemsChoice = (props: Props) => {
           mode="contained"
           style={styles.button}
           onPress={() => {
-            firebase.update({
-              collection: firestore.FieldValue.arrayUnion(mainItemId),
-            });
+            addNewItemToDB(mainItem);
             navigation.goBack();
           }}>
           Cancel

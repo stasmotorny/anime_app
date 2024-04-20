@@ -1,14 +1,19 @@
-import {AgendaSchedule} from 'react-native-calendars';
 import {Media} from '../API/__generated__/graphql.ts';
+import {FormattedSchedule} from './schedule.ts';
 
 export type StackParamList = {
   Login: undefined;
   Sign_up: undefined;
   Home: undefined;
   Details: {itemId: number};
-  Calendar: {items: AgendaSchedule};
+  Calendar: {items: FormattedSchedule};
   Choose_related_items: {
     relatedItems: Media[];
-    mainItemId: number;
+    mainItem: CollectionItem;
   };
+};
+
+export type CollectionItem = {
+  itemId: number;
+  itemGroup: string;
 };

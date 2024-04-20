@@ -7,20 +7,9 @@ import {
   fireEvent,
   screen,
 } from '@testing-library/react-native';
-
-// Note: import explicitly to use the types shipped with jest.
 import {it, expect, afterEach, describe, jest} from '@jest/globals';
 
-// Screen should contain two inputs, one btn and link to signup screen
-// ++++ Test of invalid email (should show error msg)
-// ++++ Test of invalid password (should show error msg)
-// Test of empty password (should show error msg)
-// Test of empty email (should show error msg)
-// ++++ Test of proper email (shouldn't display error msg)
-// ++++ Test of proper password (shouldn't display error msg)
-// If there's email or password errors Login btn should be disabled
-// If there's no email or password errors Login btn should be enabled
-
+jest.useFakeTimers();
 describe('Login', () => {
   afterEach(cleanup);
   jest.useFakeTimers();
