@@ -8,11 +8,17 @@ type Props = {
 
 export const Groups = (props: Props) => {
   const {groupedItems} = props;
+
   const groups = Object.keys(groupedItems);
+
   return (
     <>
       {groups.map(group => (
-        <GroupAccordion accordionData={groupedItems[group]} title={group} />
+        <GroupAccordion
+          accordionData={groupedItems[group]}
+          title={group}
+          key={group}
+        />
       ))}
     </>
   );
