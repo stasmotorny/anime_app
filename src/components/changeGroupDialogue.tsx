@@ -58,14 +58,11 @@ export const ChangeGroupDialogue = (props: Props) => {
 
   return (
     <Portal>
-      <Dialog
-        visible={isVisible}
-        onDismiss={() => {
-          setIsVisible(false);
-        }}>
+      <Dialog testID="ChangeGroupDialogue" visible={isVisible}>
         <Dialog.Title>Change group:</Dialog.Title>
         <Dialog.Content>
           <TextInput
+            testID="GroupNameInput"
             ref={inputRef}
             label="Create new group"
             value={textInputValue}
@@ -78,6 +75,8 @@ export const ChangeGroupDialogue = (props: Props) => {
               value={radioBtnValue}>
               {userGroupsArray.map(groupName => (
                 <RadioButton.Item
+                  testID="radioBtnItem"
+                  key={groupName}
                   value={groupName}
                   label={groupName}
                   status={radioBtnValue === groupName ? 'checked' : 'unchecked'}
@@ -88,17 +87,16 @@ export const ChangeGroupDialogue = (props: Props) => {
         </Dialog.Content>
         <Dialog.Actions>
           <Button
+            testID="groupChangeConfirmBtn"
             disabled={!textInputValue && !radioBtnValue}
             onPress={() => {
               onConfirmPress();
-              // onAddRelatedItems();
-              // setIsVisible(false);
             }}>
             Yes
           </Button>
           <Button
+            testID="groupChangeRefuseBtn"
             onPress={() => {
-              // onRefuseToAddRelatedItems();
               setIsVisible(false);
             }}>
             No

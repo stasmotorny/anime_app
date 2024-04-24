@@ -7,4 +7,5 @@ module.exports = {
   ],
   transformIgnorePatterns: ['/node_modules/(?!@firebase)/'],
   modulePathIgnorePatterns: ['<rootDir>/__tests__/__mocks__'],
+  coveragePathIgnorePatterns: ['<rootDir>/src/API/__generated__'],
 };

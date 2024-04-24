@@ -34,17 +34,12 @@ export const AddRelatedItemsDialogue = (props: Props) => {
       itemId: item.id,
       itemGroup: item.type!,
     });
-    setIsVisible(false);
   };
 
   return (
     <Portal>
-      <Dialog
-        visible={isVisible}
-        onDismiss={() => {
-          setIsVisible(false);
-        }}>
-        <Dialog.Title>Alert</Dialog.Title>
+      <Dialog testID="add-related-items-dialogue" visible={isVisible}>
+        <Dialog.Title>Add related items:</Dialog.Title>
         <Dialog.Content>
           <Text variant="bodyMedium">{`${
             item.title?.english || 'This item'
@@ -52,6 +47,7 @@ export const AddRelatedItemsDialogue = (props: Props) => {
         </Dialog.Content>
         <Dialog.Actions>
           <Button
+            testID="add-related-items-confirm-btn"
             onPress={() => {
               onAddRelatedItems();
               setIsVisible(false);
@@ -59,6 +55,7 @@ export const AddRelatedItemsDialogue = (props: Props) => {
             Yes
           </Button>
           <Button
+            testID="add-related-items-refuse-btn"
             onPress={() => {
               onRefuseToAddRelatedItems();
               setIsVisible(false);
