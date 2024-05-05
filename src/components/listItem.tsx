@@ -15,6 +15,7 @@ import {
 } from '../reactiveVariablesStore/userCollection.ts';
 import {AddRelatedItemsDialogue} from './addRelatedItemsDialogue.tsx';
 import {ChangeGroupDialogue} from './changeGroupDialogue.tsx';
+import analytics from '@react-native-firebase/analytics';
 
 type Props = {
   item: Media;
@@ -41,7 +42,9 @@ export const ListItem = ({item, isInCollection}: Props) => {
   return (
     <Card
       testID="item-card"
-      onPress={() => navigation.navigate('Details', {itemId: item.id})}
+      onPress={() => {
+        navigation.navigate('Details', {itemId: item.id});
+      }}
       onLongPress={() => {
         screen === 'Collection' ? setIsGroupChangeVisible(true) : null;
       }}
@@ -71,8 +74,12 @@ export const ListItem = ({item, isInCollection}: Props) => {
         <Card.Actions>
           <Button
             testID="remove_button"
-            onPress={() => {
+            onPress={async () => {
               removeItemFromDB(item.id);
+              await analytics().logEvent('Remove_item', {
+                id: item.id,
+                name: item.title?.english,
+              });
             }}>
             Remove
           </Button>
@@ -81,9 +88,13 @@ export const ListItem = ({item, isInCollection}: Props) => {
         <Card.Actions>
           <Button
             testID="add_button"
-            onPress={() => {
+            onPress={async () => {
               addRelatedItemsDialogue(item.relations?.nodes as Media[]);
               setIsVisible(true);
+              await analytics().logEvent('Add_item', {
+                id: item.id,
+                name: item.title?.english,
+              });
             }}>
             Add
           </Button>

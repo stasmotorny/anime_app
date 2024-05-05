@@ -9,6 +9,7 @@ import {
 } from '../src/API/__generated__/graphql.ts';
 import firestore from '@react-native-firebase/firestore';
 import {Provider} from 'react-native-paper';
+import analytics from '@react-native-firebase/analytics';
 
 jest.useFakeTimers();
 
@@ -128,8 +129,6 @@ it('should render remove button', () => {
   expect(wrapper.getAllByText('Remove')).toHaveLength(1);
 });
 
-jest.mock('@react-native-firebase/firestore');
-
 it('should update store on ADD btn press', () => {
   const wrapper = render(WrapWithProvider(FalsyListItem));
   const addButton = wrapper.getByTestId('add_button');
@@ -137,6 +136,7 @@ it('should update store on ADD btn press', () => {
   expect(
     firestore().collection('userCollection').doc('1').update,
   ).toHaveBeenCalled();
+  expect(analytics().logEvent).toHaveBeenCalled();
 });
 
 it('should update store on REMOVE btn press', () => {
@@ -153,4 +153,5 @@ it('should update store on REMOVE btn press', () => {
   expect(
     firestore().collection('userCollection').doc('1').update,
   ).toHaveBeenCalled();
+  expect(analytics().logEvent).toHaveBeenCalled();
 });

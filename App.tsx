@@ -13,6 +13,10 @@ import {Details} from './src/screens/details.tsx';
 import 'react-native-devsettings';
 import {Calendar} from './src/screens/calendar.tsx';
 import {RelatedItemsChoice} from './src/screens/relatedItemsChoice.tsx';
+import Crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
+import {isAdditionalDataGathered} from './src/reactiveVariablesStore/isAdditionalDataGatered.ts';
+import GatherAdditionalUserData from './src/screens/gatherAdditionalUserData.tsx';
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -34,15 +38,29 @@ const client = new ApolloClient({
 });
 
 function App(): React.JSX.Element {
-  const isLoggedIn = useReactiveVar(UserData);
+  const user = useReactiveVar(UserData);
+  const isUserDataGathered = useReactiveVar(isAdditionalDataGathered);
+
+  Crashlytics().setCrashlyticsCollectionEnabled(true);
+
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
         <Stack.Navigator>
-          {!isLoggedIn ? (
+          {!user ? (
             <Stack.Group>
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Sign_up" component={Signup} />
+            </Stack.Group>
+          ) : user?.additionalUserInfo?.isNewUser && !isUserDataGathered ? (
+            <Stack.Group>
+              <Stack.Screen
+                name="Additional_user_data"
+                component={GatherAdditionalUserData}
+                options={{
+                  title: 'Additional user data',
+                }}
+              />
             </Stack.Group>
           ) : (
             <Stack.Group>

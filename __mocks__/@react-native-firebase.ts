@@ -1,4 +1,5 @@
 import {jest} from '@jest/globals';
+import analytics from '@react-native-firebase/analytics';
 
 jest.mock('@react-native-firebase/firestore', () => {
   const mockFirestore: any = jest.fn().mockReturnValue({
@@ -16,4 +17,12 @@ jest.mock('@react-native-firebase/firestore', () => {
   };
 
   return mockFirestore;
+});
+
+jest.mock('@react-native-firebase/analytics', () => {
+  const mockAnalytics: any = jest.fn().mockReturnValue({
+    logEvent: jest.fn(() => Promise.resolve('Success')),
+  });
+
+  return mockAnalytics;
 });

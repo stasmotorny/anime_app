@@ -9,7 +9,7 @@ import {
 import {Anime} from '../screens/anime.tsx';
 import {Manga} from '../screens/manga.tsx';
 import {Collection} from '../screens/collection.tsx';
-import {signOut} from '../helpers/auth.ts';
+import {getAdditionalUserData, signOut} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
 import {StyleSheet} from 'react-native';
 import {Search} from '../components/search.tsx';
@@ -23,6 +23,7 @@ import {Sort} from '../components/sort.tsx';
 import firestore from '@react-native-firebase/firestore';
 import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
 
 type RenderSceneArgument = {
   route: {
@@ -33,6 +34,7 @@ type RenderSceneArgument = {
 };
 
 const PaperBottomNavigation = () => {
+  const user = useReactiveVar(UserData);
   const searchQuery = useReactiveVar(filterState);
 
   const [index, setIndex] = useState(0);
@@ -50,6 +52,10 @@ const PaperBottomNavigation = () => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const [isSortVisible, setIsSortVisible] = useState(false);
+
+  if (user) {
+    getAdditionalUserData(user.user.uid);
+  }
 
   let firestoreSubscriber: () => void;
 
