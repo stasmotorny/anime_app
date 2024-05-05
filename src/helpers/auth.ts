@@ -149,7 +149,7 @@ export const getAdditionalUserData = async (uid: string) => {
 export const resetPassword = (email: string) => {
   auth()
     .sendPasswordResetEmail(email)
-    .then(user => {
+    .then(() => {
       Alert.alert(`Please check your email ${email}`);
     })
     .catch(error => console.log('RESET_PASSWORD_ERROR', error));
