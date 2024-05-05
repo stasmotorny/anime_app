@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import {isAdditionalDataGathered} from '../reactiveVariablesStore/isAdditionalDataGatered.ts';
 import analytics from '@react-native-firebase/analytics';
 import moment from 'moment';
+import {Alert} from 'react-native';
 
 // TODO add password reset functionality auth().sendPasswordResetEmail
 
@@ -143,4 +144,13 @@ export const getAdditionalUserData = async (uid: string) => {
       age: moment().diff(userbirthday, 'years').toString(),
     })
     .then(() => console.log('ADDITIONAL_DATA_SETTED_TO_ANALYTICS'));
+};
+
+export const resetPassword = (email: string) => {
+  auth()
+    .sendPasswordResetEmail(email)
+    .then(() => {
+      Alert.alert(`Please check your email ${email}`);
+    })
+    .catch(error => console.log('RESET_PASSWORD_ERROR', error));
 };
