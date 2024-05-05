@@ -6,7 +6,7 @@ import validator from 'validator';
 import type {StackScreenProps} from '@react-navigation/native-stack';
 import {StackParamList} from '../types/navigation.ts';
 import {Errors} from '../types/registrationErros.ts';
-import {loginWithEmailAndPassword} from '../helpers/auth.ts';
+import {loginWithEmailAndPassword, resetPassword} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
 
 type Props = StackScreenProps<StackParamList, 'Login'>;
@@ -83,6 +83,13 @@ const Login = (props: Props): React.JSX.Element => {
           onPress={() => navigation.navigate('Sign_up')}>
           Sign up
         </Button>
+        {email ? (
+          <Button
+            testID="ResetPasswordBtn"
+            onPress={() => resetPassword(email)}>
+            Reset Password
+          </Button>
+        ) : null}
       </View>
     </>
   );
