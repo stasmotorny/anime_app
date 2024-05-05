@@ -11,6 +11,7 @@ export type StackParamList = {
     relatedItems: Media[];
     mainItem: CollectionItem;
   };
+  Additional_user_data: undefined;
 };
 
 export type CollectionItem = {

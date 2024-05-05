@@ -1,7 +1,13 @@
 import auth from '@react-native-firebase/auth';
 import {Errors} from '../types/registrationErros.ts';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
+import {
+  AdditionalUserData,
+  UserData,
+} from '../reactiveVariablesStore/userAuthState.ts';
 import firestore from '@react-native-firebase/firestore';
+import {isAdditionalDataGathered} from '../reactiveVariablesStore/isAdditionalDataGatered.ts';
+import analytics from '@react-native-firebase/analytics';
+import moment from 'moment';
 
 // TODO add password reset functionality auth().sendPasswordResetEmail
 
@@ -96,5 +102,45 @@ export const signOut = () => {
     .then(() => {
       console.log('User signed out!');
       UserData(null);
+      isAdditionalDataGathered(false);
     });
+};
+
+export const gatherAdditionalUserData = (
+  uid: string,
+  gender: string | null,
+  birthDate: Date | null,
+) => {
+  const userData = {
+    gender,
+    birthDate,
+  };
+
+  firestore()
+    .collection('users')
+    .doc(uid)
+    .set(userData)
+    .then(() => {
+      console.log('User data added!');
+    })
+    .catch(err => console.log('ADD_USER_DATA_ERROR', err));
+};
+
+export const getAdditionalUserData = async (uid: string) => {
+  const additionalData = await firestore()
+    .collection('users')
+    .doc(uid)
+    .get()
+    .then(data => data.data());
+
+  AdditionalUserData(additionalData as AdditionalUserData);
+  console.log('USER_DATA', AdditionalUserData());
+  const userbirthday = additionalData?.birthDate.toDate();
+  console.log('years', moment().diff(userbirthday, 'years'));
+  analytics()
+    .setUserProperties({
+      gender: additionalData?.gender,
+      age: moment().diff(userbirthday, 'years').toString(),
+    })
+    .then(() => console.log('ADDITIONAL_DATA_SETTED_TO_ANALYTICS'));
 };
