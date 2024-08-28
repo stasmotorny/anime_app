@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StackParamList} from '../types/navigation.ts';
 import {addNewItemToDB} from '../reactiveVariablesStore/userCollection.ts';
+import {useAddItemInCollection} from '../API/addItemInCollection.ts';
 
 type Props = {
   item: Media;
@@ -14,6 +15,7 @@ type Props = {
 
 export const AddRelatedItemsDialogue = (props: Props) => {
   const {item, isVisible, setIsVisible} = props;
+  const { mutate, isLoading, isError } = useAddItemInCollection();
 
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
 
@@ -30,10 +32,14 @@ export const AddRelatedItemsDialogue = (props: Props) => {
   };
 
   const onRefuseToAddRelatedItems = () => {
-    addNewItemToDB({
+    mutate({
       itemId: item.id,
       itemGroup: item.type!,
     });
+    // addNewItemToDB({
+    //   itemId: item.id,
+    //   itemGroup: item.type!,
+    // });
   };
 
   return (

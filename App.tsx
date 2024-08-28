@@ -17,42 +17,47 @@ import Crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import {isAdditionalDataGathered} from './src/reactiveVariablesStore/isAdditionalDataGatered.ts';
 import GatherAdditionalUserData from './src/screens/gatherAdditionalUserData.tsx';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import useUserStore from './src/reactiveVariablesStore/userStore.ts'
 
 const Stack = createStackNavigator<StackParamList>();
+const queryClient = new QueryClient();
 
 // TODO try to set unique Page id and merge media from different queries or
 //  reset store on screen change client.resetStore()
 
-const client = new ApolloClient({
-  uri: 'https://graphql.anilist.co',
-  // cache: new InMemoryCache()
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          Page: {merge: true},
-        },
-      },
-    },
-  }),
-});
+// const client = new ApolloClient({
+//   uri: 'https://graphql.anilist.co',
+//   // cache: new InMemoryCache()
+//   cache: new InMemoryCache({
+//     typePolicies: {
+//       Query: {
+//         fields: {
+//           Page: {merge: true},
+//         },
+//       },
+//     },
+//   }),
+// });
 
 function App(): React.JSX.Element {
-  const user = useReactiveVar(UserData);
+  // const user = useReactiveVar(UserData);
+  const { userTokenId, isNewUser } = useUserStore();
   const isUserDataGathered = useReactiveVar(isAdditionalDataGathered);
 
   Crashlytics().setCrashlyticsCollectionEnabled(true);
 
   return (
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
+      {/* <ApolloProvider client={client}> */}
       <NavigationContainer>
         <Stack.Navigator>
-          {!user ? (
+          {!userTokenId ? (
             <Stack.Group>
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Sign_up" component={Signup} />
             </Stack.Group>
-          ) : user?.additionalUserInfo?.isNewUser && !isUserDataGathered ? (
+          ) : isNewUser && !isUserDataGathered ? (
             <Stack.Group>
               <Stack.Screen
                 name="Additional_user_data"
@@ -86,7 +91,8 @@ function App(): React.JSX.Element {
           )}
         </Stack.Navigator>
       </NavigationContainer>
-    </ApolloProvider>
+      {/* </ApolloProvider> */}
+    </QueryClientProvider>
   );
 }
 

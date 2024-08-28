@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, forwardRef, ForwardedRef} from 'react';
 import {Media} from '../API/__generated__/graphql.ts';
 import {View} from 'react-native';
 import {ListItem} from './listItem.tsx';
@@ -6,53 +6,36 @@ import {ScreenError} from './screenError.tsx';
 import {GlobalStyles} from '../globalStyles/globalStyles.ts';
 import {ScreenLoadingSpinner} from './screenLoadingSpinner.tsx';
 import {ApolloError, useReactiveVar} from '@apollo/client';
-import {filterState} from '../reactiveVariablesStore/filterState.ts';
-import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
-import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
 import {FlashList} from '@shopify/flash-list';
-import {onLoadMore} from '../helpers/loadNextPageOfQuery.ts';
-import {FetchMoreType} from '../types/graphQL.ts';
+import Error from '@tanstack/react-query';
+import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
+import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
+import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore.ts';
+import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
 
 type Props = {
-  fetchMore?: FetchMoreType;
+  fetchMore?: any;
   loading?: boolean;
-  error?: ApolloError;
+  error: Error | null;
   data?: Media[];
 };
 
-export const ScreenScroll = (props: Props) => {
-  const {fetchMore, loading, error, data} = props;
-
-  const searchQuery = useReactiveVar(filterState);
-  const sortType = useReactiveVar(chosenSortType);
-  const userCollectionFromStore = useReactiveVar(userCollection);
-
-  useEffect(() => {
-    console.log('STORE_USER_COLLECTION', userCollectionFromStore);
-  }, [userCollectionFromStore]);
-
-  const [page, setPage] = useState(1);
+export const ScreenScroll = forwardRef((props: Props, ref: ForwardedRef<FlashList<Media>>) => {
+  const {loading, error, data} = props;
+  // const flatListRef = useRef(null);
+  const {currentScreen} = useCurrentScreenStore();
+  const { collection } = useUserCollectionStore();
+  const { page, setPage } = useFilterStore();
 
   useEffect(() => {
-    if (page > 1 && fetchMore) {
-      onLoadMore(page, fetchMore, searchQuery, sortType);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-
-  useEffect(() => {
-    if (page !== 1) {
-      setPage(1);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, sortType]);
+    console.log('COLLECTION_FROM_STORE', collection);
+  }, [collection]);
 
   if (loading) {
     return <ScreenLoadingSpinner />;
   }
 
   if (error) {
-    console.log('GraphQL error', error);
     return <ScreenError />;
   }
 
@@ -60,27 +43,31 @@ export const ScreenScroll = (props: Props) => {
     <View style={GlobalStyles.screenContainer} testID="SCREEN_SCROLL">
       <FlashList
         testID="flash_list"
+        ref={ref}
         data={data ? data : []}
         renderItem={({item}) => (
           <ListItem
             item={item!}
-            isInCollection={userCollectionFromStore.some(
-              collectionItem => collectionItem.itemId === item.id,
+            isInCollection={collection.some(
+              collectionItem => collectionItem.item_id === item.id,
             )}
+            // isInCollection={userCollectionFromStore.some(
+            //   collectionItem => collectionItem.itemId === item.id,
+            // )}
           />
         )}
-        extraData={userCollectionFromStore}
+        extraData={collection}
         estimatedItemSize={144}
         showsVerticalScrollIndicator={false}
         onEndReachedThreshold={0.9}
         contentContainerStyle={GlobalStyles.screenFlatList}
         onEndReached={() => {
-          if (data && data.length > 1) {
-            console.log('MANGA_END', data.length);
+          if (currentScreen !== 'Collection') {
+            console.log('END_REACHED', currentScreen);
             setPage(page + 1);
           }
         }}
       />
     </View>
   );
-};
+});

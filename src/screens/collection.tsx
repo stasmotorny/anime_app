@@ -1,14 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Media,
-  useGetUserCollectionQuery,
+  Media
 } from '../API/__generated__/graphql.ts';
-import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
 import {useReactiveVar} from '@apollo/client';
-import {filterState} from '../reactiveVariablesStore/filterState.ts';
-import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
-import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
-import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
 import {ActivityIndicator, FAB, Text} from 'react-native-paper';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -19,25 +13,32 @@ import {Colors} from '../colors/colors.ts';
 import {Groups} from '../components/groupedItems.tsx';
 import {GroupedObject} from '../types/groupedObject.ts';
 import {FormattedSchedule} from '../types/schedule.ts';
+import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore.ts';
+import {useGetDetailedCollection} from '../API/getDetailedCollection.ts';
+import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
+import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
+import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
 
 export const Collection = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
-  const searchQuery = useReactiveVar(filterState);
-  const sortType = useReactiveVar(chosenSortType);
-  const screen = useReactiveVar(currentScreen);
-  const userCollectionFromStore = useReactiveVar(userCollection);
+  const {sortType} = useSortTyperStore();
+  const {collection: userCollectionFromStore} = useUserCollectionStore();
+  const {name, genre, startDateGreater, status, startDateLesser, page } = useFilterStore();
 
-  const {data, loading, error} = useGetUserCollectionQuery({
-    variables: {
-      ...updateQueryVariable(searchQuery, sortType),
-      ...(userCollectionFromStore.length && {
-        ids: userCollectionFromStore.map(
-          collectionItem => collectionItem.itemId,
-        ),
-      }),
-    },
-    skip: screen !== 'Collection' || !userCollectionFromStore.length,
-  });
+  let params: any = {
+    page,
+    sortType,
+    ...(name && {name}),
+    ...(genre && {genre}),
+    ...(startDateGreater && {startDateGreater}),
+    ...(status && {status}),
+    ...(startDateLesser && {startDateLesser}),
+    ids: userCollectionFromStore.map(
+      collectionItem => collectionItem.item_id,
+    ),
+  };
+
+  const {data, isLoading, error} = useGetDetailedCollection(params);
 
   const [groupedItems, setGroupedItems] = useState<GroupedObject>({
     anime: [],
@@ -69,7 +70,7 @@ export const Collection = () => {
     if (data?.Page?.media) {
       const formattedSchedule: FormattedSchedule = {};
 
-      data.Page.media.forEach(item => {
+      data.Page.media.forEach((item: Media) => {
         if (item?.nextAiringEpisode) {
           const date = new Date(item.nextAiringEpisode.airingAt * 1000);
           const year = date.getFullYear();
@@ -104,7 +105,7 @@ export const Collection = () => {
     navigation.navigate('Calendar', {items: scheduleArg});
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <ActivityIndicator
         testID="activity-indicator"
