@@ -9,13 +9,10 @@ import {
 import {Anime} from '../screens/anime.tsx';
 import {Manga} from '../screens/manga.tsx';
 import {Collection} from '../screens/collection.tsx';
-import {getAdditionalUserData, signOut} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
 import {StyleSheet} from 'react-native';
 import {Search} from '../components/search.tsx';
-import {useReactiveVar} from '@apollo/client';
 import {Sort} from '../components/sort.tsx';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
 import useUserStore from '../reactiveVariablesStore/userStore.ts';
 import {useGetCollection} from '../API/getCollection.ts';
 import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
@@ -30,13 +27,18 @@ type RenderSceneArgument = {
 };
 
 const PaperBottomNavigation = () => {
-  const user = useReactiveVar(UserData);
   const {name, genre, startDateGreater, startDateLesser, status, resetFilter} = useFilterStore();
-  const { userTokenId, resetUser } = useUserStore();
+  const {userTokenId, resetUser} = useUserStore();
   const {mutate} = useGetCollection();
   const {setCurrentScreen} = useCurrentScreenStore();
 
-  const searchQuery: {[key: string]: string} = {name, genre, startDateGreater, startDateLesser, status};
+  const searchQuery: {[key: string]: string} = {
+    name,
+    genre,
+    startDateGreater,
+    startDateLesser,
+    status,
+  };
 
   useEffect(() => {
     if (userTokenId) {
@@ -61,9 +63,9 @@ const PaperBottomNavigation = () => {
 
   const [isSortVisible, setIsSortVisible] = useState(false);
 
-  if (user) {
-    getAdditionalUserData(user.user.uid);
-  }
+  // if (user) {
+  //   getAdditionalUserData(user.user.uid);
+  // }
 
   const renderScene = ({route}: RenderSceneArgument) => {
     if (routes[index].key !== route.key) {

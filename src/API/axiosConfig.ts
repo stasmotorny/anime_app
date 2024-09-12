@@ -2,7 +2,7 @@ import axios from 'axios';
 // import useUserStore from '../reactiveVariablesStore/userStore';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000'
+  baseURL: 'http://localhost:3000',
 });
 
 // const { userTokenId } = useUserStore();

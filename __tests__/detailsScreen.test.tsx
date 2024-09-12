@@ -1,18 +1,25 @@
 import React from 'react';
 import {render, waitFor} from '@testing-library/react-native';
-import {GetDetailsDocument} from '../src/API/__generated__/graphql.ts';
 import {Details} from '../src/screens/details.tsx';
-import {it, expect} from '@jest/globals';
+import {it, expect, jest, beforeAll, afterEach} from '@jest/globals';
 import {MockedNavigator} from './__mocks__/mocks.tsx';
+import axiosInstance from '../src/API/axiosConfig.ts';
+import MockAdapter from 'axios-mock-adapter';
+
+let mock: MockAdapter;
+
+jest.useFakeTimers();
+
+beforeAll(() => {
+  mock = new MockAdapter(axiosInstance, {onNoMatch: 'throwException'});
+});
+
+afterEach(() => {
+  mock.reset();
+});
 
 const mocks = [
   {
-    request: {
-      query: GetDetailsDocument,
-      variables: {
-        id: 12,
-      },
-    },
     result: {
       data: {
         Media: {
@@ -70,12 +77,6 @@ const mocks = [
 
 const mocksWithNull = [
   {
-    request: {
-      query: GetDetailsDocument,
-      variables: {
-        id: 12,
-      },
-    },
     result: {
       data: {
         Media: {
@@ -131,21 +132,31 @@ const mocksWithNull = [
   },
 ];
 
-const errorMock = [
-  {
-    request: {
-      query: GetDetailsDocument,
-      variables: {
-        id: 12,
-      },
-    },
-    error: new Error('test error'),
-  },
-];
+it('should render loading spinner while data is loading', async () => {
+  mock.onGet(`/anilist/details`).timeoutOnce();
+  const wrapper = render(
+    <MockedNavigator component={Details} params={{itemId: 12}} />,
+  );
+  await waitFor(() => [
+    expect(wrapper.getAllByTestId('activity-indicator')).toHaveLength(1),
+  ]);
+});
+
+it('?? should be displayed if theres no score and unknown if theres no title', async () => {
+  mock.onGet(`/anilist/details`).replyOnce(200, mocksWithNull[0].result.data);
+  const wrapper = render(
+    <MockedNavigator component={Details} params={{itemId: 12}} />,
+  );
+  await waitFor(() => [
+    expect(wrapper.getAllByText('Unknown')).toHaveLength(1),
+    expect(wrapper.getAllByText('??')).toHaveLength(2),
+  ]);
+});
 
 it('renders without error', async () => {
+  mock.onGet(`/anilist/details`).replyOnce(200, mocks[0].result.data);
   const wrapper = render(
-    <MockedNavigator component={Details} mocks={mocks} params={{itemId: 12}} />,
+    <MockedNavigator component={Details} params={{itemId: 12}} />,
   );
   await waitFor(() => [
     expect(wrapper.getAllByText('Epic adventure')).toHaveLength(1),
@@ -158,36 +169,10 @@ it('renders without error', async () => {
   ]);
 });
 
-it('?? should be displayed if theres no score and unknown if theres no title', async () => {
-  const wrapper = render(
-    <MockedNavigator
-      component={Details}
-      mocks={mocksWithNull}
-      params={{itemId: 12}}
-    />,
-  );
-  await waitFor(() => [
-    expect(wrapper.getAllByText('Unknown')).toHaveLength(1),
-    expect(wrapper.getAllByText('??')).toHaveLength(2),
-  ]);
-});
-
-it('should render loading spinner while data is loading', async () => {
-  const wrapper = render(
-    <MockedNavigator component={Details} params={{itemId: 12}} mocks={mocks} />,
-  );
-  await waitFor(() => [
-    expect(wrapper.getAllByTestId('activity-indicator')).toHaveLength(1),
-  ]);
-});
-
 it('should error message there was an error on loading data', async () => {
+  mock.onGet(`/anilist/details`).replyOnce(400, 'bad request');
   const wrapper = render(
-    <MockedNavigator
-      component={Details}
-      mocks={errorMock}
-      params={{itemId: 12}}
-    />,
+    <MockedNavigator component={Details} params={{itemId: 12}} />,
   );
   await waitFor(() => [
     expect(wrapper.getAllByText('Failed to load data')).toHaveLength(1),

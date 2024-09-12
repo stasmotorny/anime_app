@@ -8,6 +8,26 @@ import {
   screen,
 } from '@testing-library/react-native';
 import {it, expect, afterEach, describe, jest} from '@jest/globals';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {Provider} from 'react-native-paper';
+
+const testClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const WrapWithProvider = (InnerComponent: React.FC) => {
+  return (
+    <QueryClientProvider client={testClient}>
+      <Provider>
+        <InnerComponent />
+      </Provider>
+    </QueryClientProvider>
+  );
+};
 
 jest.useFakeTimers();
 describe('Login', () => {
@@ -15,30 +35,30 @@ describe('Login', () => {
   jest.useFakeTimers();
 
   it('renders email input', () => {
-    const {getAllByTestId} = render(<Login />);
+    const {getAllByTestId} = render(WrapWithProvider(Login));
     expect(getAllByTestId('EmailInput').length).toBe(1);
   });
   it('renders password input', () => {
-    const {getAllByTestId} = render(<Login />);
+    const {getAllByTestId} = render(WrapWithProvider(Login));
     expect(getAllByTestId('PasswordInput').length).toBe(1);
   });
   it('error should NOT be displayed if email is VALID', () => {
-    const {getByTestId, queryByTestId} = render(<Login />);
+    const {getByTestId, queryByTestId} = render(WrapWithProvider(Login));
     fireEvent.changeText(getByTestId('EmailInput'), 'sf@gt.com');
     expect(queryByTestId('EmailInputError')).toBe(null);
   });
   it('error SHOULD be displayed if email is INVALID', () => {
-    const {getByTestId, getAllByTestId} = render(<Login />);
+    const {getByTestId, getAllByTestId} = render(WrapWithProvider(Login));
     fireEvent.changeText(getByTestId('EmailInput'), 'sfgt.com');
     expect(getAllByTestId('EmailInputError').length).toBe(1);
   });
   it('error should NOT be displayed if password is VALID', () => {
-    const {getByTestId, queryByTestId} = render(<Login />);
+    const {getByTestId, queryByTestId} = render(WrapWithProvider(Login));
     fireEvent.changeText(getByTestId('PasswordInput'), '123456');
     expect(queryByTestId('PasswordInputError')).toBe(null);
   });
   it('error SHOULD be displayed if password is INVALID', () => {
-    const {getByTestId, getAllByTestId} = render(<Login />);
+    const {getByTestId, getAllByTestId} = render(WrapWithProvider(Login));
     fireEvent.changeText(getByTestId('PasswordInput'), '1234');
     expect(getAllByTestId('PasswordInputError').length).toBe(1);
   });
@@ -46,7 +66,8 @@ describe('Login', () => {
     const navigation = {
       navigate: jest.fn(),
     };
-    render(<Login navigation={navigation} />);
+    const LoginWithNav = () => <Login navigation={navigation} />;
+    render(WrapWithProvider(LoginWithNav));
     expect(screen.getByText('Login')).toBeOnTheScreen();
     fireEvent.press(screen.getByTestId('SignupBtn'));
     expect(navigation.navigate).toHaveBeenCalledWith('Sign_up');

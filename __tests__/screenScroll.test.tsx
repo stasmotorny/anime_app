@@ -7,8 +7,9 @@ import {
   MediaStatus,
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
-import {FetchMoreType} from '../src/types/graphQL.ts';
 import {Provider} from 'react-native-paper';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import useFilterStore from '../src/reactiveVariablesStore/filterStore.ts';
 
 jest.useFakeTimers();
 
@@ -193,17 +194,33 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
+const testClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
 it('Should increase page on scroll reached end', () => {
-  const fetchMore = jest.fn();
+  const page = useFilterStore.getState().page;
   const ScrollWrappedWithProvider = () => {
     return (
-      <Provider>
-        <ScreenScroll fetchMore={fetchMore as FetchMoreType} data={data} />
-      </Provider>
+      <QueryClientProvider client={testClient}>
+        <Provider>
+          <ScreenScroll
+            // fetchMore={fetchMore as FetchMoreType}
+            data={data}
+            error={null}
+          />
+        </Provider>
+      </QueryClientProvider>
     );
   };
   const wrapper = render(<ScrollWrappedWithProvider />);
+  expect(page).toEqual(1);
   const flashlist = wrapper.getByTestId('flash_list');
   fireEvent.scroll(flashlist);
-  expect(fetchMore).toHaveBeenCalledTimes(1);
+  const pageAfterScroll = useFilterStore.getState().page;
+  expect(pageAfterScroll).toEqual(2);
 });

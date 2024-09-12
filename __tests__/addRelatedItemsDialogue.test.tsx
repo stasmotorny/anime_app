@@ -6,17 +6,47 @@ import {
   render,
   waitFor,
 } from '@testing-library/react-native';
-import {afterEach, expect, it, jest} from '@jest/globals';
-import {Provider} from 'react-native-paper';
+import {afterEach, expect, it, jest, beforeAll} from '@jest/globals';
 import {AddRelatedItemsDialogue} from '../src/components/addRelatedItemsDialogue.tsx';
 import {
   Media,
   MediaStatus,
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
-import {MockedNavigator} from './__mocks__/mocks.tsx';
-import {addNewItemToDB} from '../src/reactiveVariablesStore/userCollection.ts';
-import * as handlers from '../src/reactiveVariablesStore/userCollection.ts';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {Provider} from 'react-native-paper';
+import axiosInstance from '../src/API/axiosConfig.ts';
+import MockAdapter from 'axios-mock-adapter';
+
+let mock: MockAdapter;
+
+jest.useFakeTimers();
+
+beforeAll(() => {
+  mock = new MockAdapter(axiosInstance, {onNoMatch: 'throwException'});
+});
+
+afterEach(() => {
+  mock.reset();
+});
+
+const testClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const WrapWithProvider = (InnerComponent: React.FC) => {
+  return (
+    <QueryClientProvider client={testClient}>
+      <Provider>
+        <InnerComponent />
+      </Provider>
+    </QueryClientProvider>
+  );
+};
 
 jest.useFakeTimers();
 afterEach(cleanup);
@@ -28,14 +58,6 @@ jest.mock('@react-navigation/native', () => ({
     navigate: mockedNavigate,
   }),
 }));
-
-const WrapWithProvider = (InnerComponent: React.FC) => {
-  return (
-    <Provider>
-      <InnerComponent />
-    </Provider>
-  );
-};
 
 const mockedSetIsVisible = jest.fn();
 
@@ -94,17 +116,7 @@ it('on add related items function', () => {
   expect(mockedNavigate).toHaveBeenCalledTimes(1);
 });
 
-it('addNewItemToDB should be called', async () => {
-  const spy = jest.spyOn(handlers, 'addNewItemToDB');
-  const wrapper = render(WrapWithProvider(ChangeGroupDialogueFunc));
-
-  fireEvent.press(wrapper.getByTestId('add-related-items-refuse-btn'));
-
-  await waitFor(() => expect(spy).toHaveBeenCalled());
-});
-
 it('dialogue should hide on refuse btn press', async () => {
-  // const spy = jest.spyOn(handlers, 'addNewItemToDB');
   const wrapper = render(WrapWithProvider(ChangeGroupDialogueFunc));
 
   act(() =>
@@ -115,7 +127,6 @@ it('dialogue should hide on refuse btn press', async () => {
 });
 
 it('dialogue should hide on confirm btn press', async () => {
-  // const spy = jest.spyOn(handlers, 'addNewItemToDB');
   const wrapper = render(WrapWithProvider(ChangeGroupDialogueFunc));
 
   act(() =>

@@ -1,20 +1,22 @@
-import { create } from "zustand";
+import {create} from 'zustand';
 
 export type CurrentScreen = {
-    currentScreen: 'Anime' | 'Manga' | 'Collection';
+  currentScreen: 'Anime' | 'Manga' | 'Collection';
 };
 
 type CurrentScreenActions = {
-    setCurrentScreen: (screen: 'Anime' | 'Manga' | 'Collection') => void;
+  setCurrentScreen: (screen: 'Anime' | 'Manga' | 'Collection') => void;
 };
 
-const useCurrentScreenStore = create<CurrentScreen & CurrentScreenActions>((set) => ({
+const useCurrentScreenStore = create<CurrentScreen & CurrentScreenActions>(
+  set => ({
     currentScreen: 'Anime',
-    setCurrentScreen: (screen) => {
+    setCurrentScreen: screen => {
       set(() => ({
-          currentScreen: screen
+        currentScreen: screen,
       }));
     },
-  }));
-  
-  export default useCurrentScreenStore;
+  }),
+);
+
+export default useCurrentScreenStore;

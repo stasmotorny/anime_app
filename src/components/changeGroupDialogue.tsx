@@ -50,6 +50,7 @@ export const ChangeGroupDialogue = (props: Props) => {
   };
 
   const onConfirmPress = () => {
+    console.log('ON_CONFIRM_PRESS_FIRED');
     const newGroup = textInputValue || radioBtnValue;
     changeItemGroup({itemId, newGroup});
   };

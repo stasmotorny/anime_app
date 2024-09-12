@@ -3,7 +3,7 @@ import {Media} from '../API/__generated__/graphql.ts';
 import {ScreenScroll} from '../components/screenScroll.tsx';
 import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
 import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
-import  {useGetManga} from '../API/getManga.ts';
+import {useGetManga} from '../API/getManga.ts';
 import { FlashList } from '@shopify/flash-list';
 
 export const Manga = () => {
@@ -31,7 +31,13 @@ export const Manga = () => {
     }
   }, [name, genre, startDateGreater, status, startDateLesser, sortType]);
 
-  const { data: queryData, isLoading, isPending, isError, error } = useGetManga(params);
+  const {
+    data: queryData,
+    isLoading,
+    isPending,
+    isError,
+    error,
+  } = useGetManga(params);
 
   useEffect(() => {
     if (queryData) {
@@ -41,6 +47,7 @@ export const Manga = () => {
         setMedia([...media, ...queryData.Page.media]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryData, isPending]);
   return (
     <ScreenScroll

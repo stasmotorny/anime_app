@@ -4,11 +4,19 @@ import {ScreenScroll} from '../components/screenScroll.tsx';
 import {useGetAnime} from '../API/getAnime.ts';
 import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
 import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
-import { FlashList } from '@shopify/flash-list';
+import {FlashList} from '@shopify/flash-list';
 
 export const Anime = (): React.JSX.Element => {
   const [media, setMedia] = useState<Media[]>([]);
-  const {name, genre, startDateGreater, status, startDateLesser, page, setPage } = useFilterStore();
+  const {
+    name,
+    genre,
+    startDateGreater,
+    status,
+    startDateLesser,
+    page,
+    setPage,
+  } = useFilterStore();
   const {sortType} = useSortTyperStore();
   const scrollRef = useRef<FlashList<Media>>(null);
 
@@ -24,14 +32,21 @@ export const Anime = (): React.JSX.Element => {
 
   useEffect(() => {
     if (scrollRef?.current?.scrollToOffset) {
-      scrollRef?.current?.scrollToOffset({ animated: false, offset: 0 });
+      scrollRef?.current?.scrollToOffset({animated: false, offset: 0});
     }
     if (page !== 1) {
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, genre, startDateGreater, status, startDateLesser, sortType]);
 
-  const { data: queryData, isLoading, isPending, isError, error } = useGetAnime(params);
+  const {
+    data: queryData,
+    isLoading,
+    isPending,
+    isError,
+    error,
+  } = useGetAnime(params);
 
   useEffect(() => {
     if (queryData) {
@@ -41,6 +56,7 @@ export const Anime = (): React.JSX.Element => {
         setMedia([...media, ...queryData.Page.media]);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryData, isPending]);
 
   // return user?.additionalUserInfo?.isNewUser && !isGathered ? (

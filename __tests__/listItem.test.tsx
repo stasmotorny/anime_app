@@ -7,9 +7,8 @@ import {
   MediaStatus,
   MediaType,
 } from '../src/API/__generated__/graphql.ts';
-import firestore from '@react-native-firebase/firestore';
 import {Provider} from 'react-native-paper';
-import analytics from '@react-native-firebase/analytics';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 jest.useFakeTimers();
 
@@ -51,11 +50,21 @@ const noTitleItem: Media = {
 
 const mockedNavigate = jest.fn();
 
+const testClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
 const WrapWithProvider = (InnerComponent: React.FC) => {
   return (
-    <Provider>
-      <InnerComponent />
-    </Provider>
+    <QueryClientProvider client={testClient}>
+      <Provider>
+        <InnerComponent />
+      </Provider>
+    </QueryClientProvider>
   );
 };
 
@@ -72,32 +81,6 @@ jest.mock('@react-navigation/native', () => ({
     navigate: mockedNavigate,
   }),
 }));
-
-// UserData({
-//   user: {
-//     uid: '1',
-//     displayName: null,
-//     email: 'sm@sm.sm',
-//     emailVerified: false,
-//     isAnonymous: false,
-//   },
-// });
-// console.log('USER_DATA', UserData());
-// mockReactNativeFirestore({
-//   database: {
-//     userCollection: [
-//       {
-//         id: '1',
-//         collection: [101922, 1535, 105778, 105398, 30002],
-//       },
-//     ],
-//   },
-//   // userCollection: {
-//   //   1: {
-//   //     collection: [101922, 1535, 105778, 105398, 30002],
-//   //   },
-//   // },
-// });
 
 it('listItem navigation test', () => {
   const wrapper = render(WrapWithProvider(TruthyListItem));
@@ -127,31 +110,4 @@ it('should render add button', () => {
 it('should render remove button', () => {
   const wrapper = render(WrapWithProvider(TruthyListItem));
   expect(wrapper.getAllByText('Remove')).toHaveLength(1);
-});
-
-it('should update store on ADD btn press', () => {
-  const wrapper = render(WrapWithProvider(FalsyListItem));
-  const addButton = wrapper.getByTestId('add_button');
-  fireEvent.press(addButton);
-  expect(
-    firestore().collection('userCollection').doc('1').update,
-  ).toHaveBeenCalled();
-  expect(analytics().logEvent).toHaveBeenCalled();
-});
-
-it('should update store on REMOVE btn press', () => {
-  const ComponentWrappedWithProvider = () => {
-    return (
-      <Provider>
-        <ListItem item={item} isInCollection={true} />
-      </Provider>
-    );
-  };
-  const wrapper = render(<ComponentWrappedWithProvider />);
-  const addButton = wrapper.getByTestId('remove_button');
-  fireEvent.press(addButton);
-  expect(
-    firestore().collection('userCollection').doc('1').update,
-  ).toHaveBeenCalled();
-  expect(analytics().logEvent).toHaveBeenCalled();
 });

@@ -1,25 +1,26 @@
 import React from 'react';
 import {render, waitFor} from '@testing-library/react-native';
-import {
-  GetMangaListDocument,
-  MediaSort,
-} from '../src/API/__generated__/graphql.ts';
 import {Manga} from '../src/screens/manga.tsx';
-import {it, expect} from '@jest/globals';
+import {it, expect, jest, beforeAll, afterEach} from '@jest/globals';
 import {MockedNavigator} from './__mocks__/mocks.tsx';
-import {currentScreen} from '../src/reactiveVariablesStore/currentScreen.ts';
-import {GraphQLError} from 'graphql/error';
+import useCurrentScreenStore from '../src/reactiveVariablesStore/currentScreenStore.ts';
+import axiosInstance from '../src/API/axiosConfig.ts';
+import MockAdapter from 'axios-mock-adapter';
+
+let mock: MockAdapter;
+
+jest.useFakeTimers();
+
+beforeAll(() => {
+  mock = new MockAdapter(axiosInstance, {onNoMatch: 'throwException'});
+});
+
+afterEach(() => {
+  mock.reset();
+});
 
 const mocks = [
   {
-    request: {
-      query: GetMangaListDocument,
-      variables: {
-        page: 1,
-        perPage: 50,
-        sortType: MediaSort.PopularityDesc,
-      },
-    },
     result: {
       data: {
         Page: {
@@ -66,9 +67,17 @@ const mocks = [
   },
 ];
 
+it('should render loading spinner while data is loading', async () => {
+  useCurrentScreenStore.getState().setCurrentScreen('Manga');
+  mock.onGet(`/anilist/mangas`).timeoutOnce();
+  const wrapper = render(<MockedNavigator component={Manga} />);
+  expect(wrapper.getAllByTestId('activity-indicator')).toHaveLength(1);
+});
+
 it('renders without error', async () => {
-  currentScreen('Manga');
-  const wrapper = render(<MockedNavigator component={Manga} mocks={mocks} />);
+  useCurrentScreenStore.getState().setCurrentScreen('Manga');
+  mock.onGet(`/anilist/mangas`).reply(200, mocks[0].result.data);
+  const wrapper = render(<MockedNavigator component={Manga} />);
   await waitFor(() => [
     expect(wrapper.getAllByText('Some title')).toHaveLength(1),
     expect(wrapper.queryByTestId('item-card')).toBeTruthy(),
@@ -76,32 +85,10 @@ it('renders without error', async () => {
   ]);
 });
 
-it('should render loading spinner while data is loading', async () => {
-  currentScreen('Manga');
-  const wrapper = render(<MockedNavigator component={Manga} mocks={mocks} />);
-  await waitFor(() => [
-    expect(wrapper.getAllByTestId('activity-indicator')).toHaveLength(1),
-  ]);
-});
-
 it('should display error message if there was an error on loading data', async () => {
-  const errorMock = [
-    {
-      request: {
-        query: GetMangaListDocument,
-        variables: {
-          page: 1,
-          perPage: 50,
-          sortType: MediaSort.PopularityDesc,
-        },
-      },
-      error: new GraphQLError('test error'),
-    },
-  ];
-  currentScreen('Manga');
-  const wrapper = render(
-    <MockedNavigator component={Manga} mocks={errorMock} />,
-  );
+  useCurrentScreenStore.getState().setCurrentScreen('Manga');
+  mock.onGet(`/anilist/mangas`).reply(400, 'bad request');
+  const wrapper = render(<MockedNavigator component={Manga} />);
   await waitFor(() => [
     expect(wrapper.getAllByText('Failed to load data')).toHaveLength(1),
   ]);

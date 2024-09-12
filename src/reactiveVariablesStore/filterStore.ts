@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import {create} from 'zustand';
 
 export type Filter = {
   name: string;
@@ -10,17 +10,17 @@ export type Filter = {
 };
 
 type FiletrActions = {
-    setFilter: (filterData: Filter) => void;
-    setName: (name: string) => void;
-    setGenre: (genre: string) => void;
-    setStartDateGreater: (startDateGreater: any) => void;
-    setStatus: (status: string) => void;
-    setStartDateLesser: (startDateLesser: any) => void;
-    setPage: (page: number) => void;
-    resetFilter: () => void;
+  setFilter: (filterData: Filter) => void;
+  setName: (name: string) => void;
+  setGenre: (genre: string) => void;
+  setStartDateGreater: (startDateGreater: any) => void;
+  setStatus: (status: string) => void;
+  setStartDateLesser: (startDateLesser: any) => void;
+  setPage: (page: number) => void;
+  resetFilter: () => void;
 };
 
-const useFilterStore = create<Filter & FiletrActions>((set) => ({
+const useFilterStore = create<Filter & FiletrActions>(set => ({
   name: '',
   genre: '',
   startDateGreater: null,
@@ -28,43 +28,43 @@ const useFilterStore = create<Filter & FiletrActions>((set) => ({
   startDateLesser: null,
   page: 1,
   setFilter: (filterData: Filter) => {
-    const { name, genre, startDateGreater, status, startDateLesser } = filterData;
+    const {name, genre, startDateGreater, status, startDateLesser} = filterData;
     set(() => ({
       name,
       genre,
       startDateGreater,
       status,
-      startDateLesser
+      startDateLesser,
     }));
   },
   setName: (name: string) => {
     set(() => ({
-      name
+      name,
     }));
   },
   setGenre: (genre: string) => {
     set(() => ({
-      genre
+      genre,
     }));
   },
   setStartDateGreater: (startDateGreater: any) => {
     set(() => ({
-      startDateGreater
+      startDateGreater,
     }));
   },
-  setStatus: (status) => {
+  setStatus: (status: string) => {
     set(() => ({
-      status
+      status,
     }));
   },
-  setStartDateLesser: (startDateLesser) => {
+  setStartDateLesser: (startDateLesser: any) => {
     set(() => ({
-      startDateLesser
+      startDateLesser,
     }));
   },
-  setPage: (page) => {
+  setPage: (page: number) => {
     set(() => ({
-      page
+      page,
     }));
   },
   resetFilter: () => {
@@ -74,9 +74,9 @@ const useFilterStore = create<Filter & FiletrActions>((set) => ({
       startDate_greater: null,
       status: null,
       startDate_lesser: null,
-      page: 1
+      page: 1,
     }));
-  }, 
+  },
 }));
 
 export default useFilterStore;

@@ -10,17 +10,32 @@ import {
 import {afterEach, expect, it, jest} from '@jest/globals';
 import {Provider} from 'react-native-paper';
 import {ChangeGroupDialogue} from '../src/components/changeGroupDialogue.tsx';
-import {userCollection} from '../src/reactiveVariablesStore/userCollection.ts';
-import * as handlers from '../src/reactiveVariablesStore/userCollection.ts';
+import useUserCollectionStore from '../src/reactiveVariablesStore/userCollectionStore.ts';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+
+const mockedMutate = jest.fn();
+jest.mock('../src/API/changeCollectionItemGroup', () => ({
+  useChangeCollectionItemGroup: () => ({mutate: mockedMutate}),
+}));
+
+const testClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 jest.useFakeTimers();
 afterEach(cleanup);
 
 const WrapWithProvider = (InnerComponent: React.FC) => {
   return (
-    <Provider>
-      <InnerComponent />
-    </Provider>
+    <QueryClientProvider client={testClient}>
+      <Provider>
+        <InnerComponent />
+      </Provider>
+    </QueryClientProvider>
   );
 };
 
@@ -57,11 +72,11 @@ it('Confirm btn press calls setIsVisible', () => {
 });
 
 it('Renders groups', () => {
-  userCollection([
-    {itemId: 1, itemGroup: 'Anime'},
-    {itemId: 2, itemGroup: 'Manga'},
-    {itemId: 3, itemGroup: 'Anime'},
-    {itemId: 4, itemGroup: 'User group'},
+  useUserCollectionStore.getState().setCollection([
+    {item_id: 1, item_group: 'Anime'},
+    {item_id: 2, item_group: 'Manga'},
+    {item_id: 3, item_group: 'Anime'},
+    {item_id: 4, item_group: 'User group'},
   ]);
 
   const wrapper = render(WrapWithProvider(ChangeGroupDialogueFunc));
@@ -70,11 +85,11 @@ it('Renders groups', () => {
 });
 
 it('On radio button press', () => {
-  userCollection([
-    {itemId: 1, itemGroup: 'Anime'},
-    {itemId: 2, itemGroup: 'Manga'},
-    {itemId: 3, itemGroup: 'Anime'},
-    {itemId: 4, itemGroup: 'User group'},
+  useUserCollectionStore.getState().setCollection([
+    {item_id: 1, item_group: 'Anime'},
+    {item_id: 2, item_group: 'Manga'},
+    {item_id: 3, item_group: 'Anime'},
+    {item_id: 4, item_group: 'User group'},
   ]);
 
   const wrapper = render(WrapWithProvider(ChangeGroupDialogueFunc));
@@ -97,11 +112,11 @@ it('On radio button press', () => {
 });
 
 it('Input focus should reset radio btn state', async () => {
-  userCollection([
-    {itemId: 1, itemGroup: 'Anime'},
-    {itemId: 2, itemGroup: 'Manga'},
-    {itemId: 3, itemGroup: 'Anime'},
-    {itemId: 4, itemGroup: 'User group'},
+  useUserCollectionStore.getState().setCollection([
+    {item_id: 1, item_group: 'Anime'},
+    {item_id: 2, item_group: 'Manga'},
+    {item_id: 3, item_group: 'Anime'},
+    {item_id: 4, item_group: 'User group'},
   ]);
 
   const user = userEvent.setup();
@@ -123,32 +138,31 @@ it('Input focus should reset radio btn state', async () => {
 });
 
 it('On confirm press', async () => {
-  userCollection([
-    {itemId: 1, itemGroup: 'Anime'},
-    {itemId: 2, itemGroup: 'Manga'},
-    {itemId: 3, itemGroup: 'Anime'},
-    {itemId: 4, itemGroup: 'User group'},
+  useUserCollectionStore.getState().setCollection([
+    {item_id: 1, item_group: 'Anime'},
+    {item_id: 2, item_group: 'Manga'},
+    {item_id: 3, item_group: 'Anime'},
+    {item_id: 4, item_group: 'User group'},
   ]);
 
-  const spy = jest.spyOn(handlers, 'changeItemGroup');
   const wrapper = render(WrapWithProvider(ChangeGroupDialogueFunc));
   const confirmBtn = wrapper.getByTestId('groupChangeConfirmBtn');
   const radioButtons = wrapper.queryAllByTestId('radioBtnItem');
 
   act(() => fireEvent.press(confirmBtn));
-  await waitFor(() => expect(spy).not.toHaveBeenCalled());
+  await waitFor(() => expect(mockedMutate).not.toHaveBeenCalled());
 
   fireEvent.press(radioButtons[1]);
   act(() => fireEvent.press(confirmBtn));
-  await waitFor(() => expect(spy).toHaveBeenCalled());
+  await waitFor(() => expect(mockedMutate).toHaveBeenCalled());
 });
 
 it('Confirm btn should be disabled if theres no group', async () => {
-  userCollection([
-    {itemId: 1, itemGroup: 'Anime'},
-    {itemId: 2, itemGroup: 'Manga'},
-    {itemId: 3, itemGroup: 'Anime'},
-    {itemId: 4, itemGroup: 'User group'},
+  useUserCollectionStore.getState().setCollection([
+    {item_id: 1, item_group: 'Anime'},
+    {item_id: 2, item_group: 'Manga'},
+    {item_id: 3, item_group: 'Anime'},
+    {item_id: 4, item_group: 'User group'},
   ]);
 
   const wrapper = render(WrapWithProvider(ChangeGroupDialogueFunc));

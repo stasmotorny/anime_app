@@ -4,53 +4,74 @@ import Signup from '../src/screens/signup.tsx';
 import {render, cleanup, fireEvent} from '@testing-library/react-native';
 import {it, expect, afterEach, describe, jest} from '@jest/globals';
 
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {Provider} from 'react-native-paper';
+
+const testClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const WrapWithProvider = (InnerComponent: React.FC) => {
+  return (
+    <QueryClientProvider client={testClient}>
+      <Provider>
+        <InnerComponent />
+      </Provider>
+    </QueryClientProvider>
+  );
+};
+
 jest.useFakeTimers();
 describe('Signup', () => {
   afterEach(cleanup);
   jest.useFakeTimers();
 
   it('renders email input', () => {
-    const {getAllByTestId} = render(<Signup />);
+    const {getAllByTestId} = render(WrapWithProvider(Signup));
     expect(getAllByTestId('EmailInput').length).toBe(1);
   });
   it('renders password input', () => {
-    const {getAllByTestId} = render(<Signup />);
+    const {getAllByTestId} = render(WrapWithProvider(Signup));
     expect(getAllByTestId('PasswordInput').length).toBe(1);
   });
   it('renders confirm password input', () => {
-    const {getAllByTestId} = render(<Signup />);
+    const {getAllByTestId} = render(WrapWithProvider(Signup));
     expect(getAllByTestId('ConfirmPasswordInput').length).toBe(1);
   });
 
   it('error should NOT be displayed if email is VALID', () => {
-    const {getByTestId, queryByTestId} = render(<Signup />);
+    const {getByTestId, queryByTestId} = render(WrapWithProvider(Signup));
     fireEvent.changeText(getByTestId('EmailInput'), 'sf@gt.com');
     expect(queryByTestId('EmailInputError')).toBe(null);
   });
   it('error SHOULD be displayed if email is INVALID', () => {
-    const {getByTestId, getAllByTestId} = render(<Signup />);
+    const {getByTestId, getAllByTestId} = render(WrapWithProvider(Signup));
     fireEvent.changeText(getByTestId('EmailInput'), 'sfgt.com');
     expect(getAllByTestId('EmailInputError').length).toBe(1);
   });
   it('error should NOT be displayed if password is VALID', () => {
-    const {getByTestId, queryByTestId} = render(<Signup />);
+    const {getByTestId, queryByTestId} = render(WrapWithProvider(Signup));
     fireEvent.changeText(getByTestId('PasswordInput'), '123456');
     expect(queryByTestId('PasswordInputError')).toBe(null);
   });
   it('error SHOULD be displayed if password is INVALID', () => {
-    const {getByTestId, getAllByTestId} = render(<Signup />);
+    const {getByTestId, getAllByTestId} = render(WrapWithProvider(Signup));
     fireEvent.changeText(getByTestId('PasswordInput'), '1234');
     expect(getAllByTestId('PasswordInputError').length).toBe(1);
   });
 
   it('error should NOT be displayed if CONFIRM password is VALID', () => {
-    const {getByTestId, queryByTestId} = render(<Signup />);
+    const {getByTestId, queryByTestId} = render(WrapWithProvider(Signup));
     fireEvent.changeText(getByTestId('PasswordInput'), '123456');
     fireEvent.changeText(getByTestId('ConfirmPasswordInput'), '123456');
     expect(queryByTestId('ConfirmPasswordInputError')).toBe(null);
   });
   it('error SHOULD be displayed if CONFIRM password is INVALID', () => {
-    const {getByTestId, getAllByTestId} = render(<Signup />);
+    const {getByTestId, getAllByTestId} = render(WrapWithProvider(Signup));
     fireEvent.changeText(getByTestId('PasswordInput'), '123456');
     fireEvent.changeText(getByTestId('ConfirmPasswordInput'), '1234567');
     expect(getAllByTestId('ConfirmPasswordInputError').length).toBe(1);
