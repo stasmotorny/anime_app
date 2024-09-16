@@ -1,6 +1,6 @@
 import axiosInstance from './axiosConfig';
 import { useMutation } from '@tanstack/react-query';
-import useUserStore, { User } from '../reactiveVariablesStore/userStore'
+import useUserStore, { User } from '../store/userStore'
 
 type SignUpUserQueryParams = {
     password: string;

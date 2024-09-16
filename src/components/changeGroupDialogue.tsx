@@ -7,7 +7,7 @@ import {
 } from 'react-native-paper';
 import React, {useState, useRef} from 'react';
 import {ScrollView, TextInput as RNTextInput} from 'react-native';
-import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore';
+import useUserCollectionStore from '../store/userCollectionStore';
 import {useChangeCollectionItemGroup} from '../API/changeCollectionItemGroup';
 
 type Props = {

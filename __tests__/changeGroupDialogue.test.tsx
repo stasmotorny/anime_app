@@ -10,7 +10,7 @@ import {
 import {afterEach, expect, it, jest} from '@jest/globals';
 import {Provider} from 'react-native-paper';
 import {ChangeGroupDialogue} from '../src/components/changeGroupDialogue.tsx';
-import useUserCollectionStore from '../src/reactiveVariablesStore/userCollectionStore.ts';
+import useUserCollectionStore from '../src/store/userCollectionStore.ts';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 const mockedMutate = jest.fn();

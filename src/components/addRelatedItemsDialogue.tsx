@@ -4,7 +4,7 @@ import {Media} from '../API/__generated__/graphql.ts';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StackParamList} from '../types/navigation.ts';
-import {addNewItemToDB} from '../reactiveVariablesStore/userCollection.ts';
+import {addNewItemToDB} from '../store/userCollection.ts';
 import {useAddItemInCollection} from '../API/addItemInCollection.ts';
 
 type Props = {

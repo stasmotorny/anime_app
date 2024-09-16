@@ -2,7 +2,7 @@ import {expect, it} from '@jest/globals';
 import {MediaSort, MediaStatus} from '../src/API/__generated__/graphql.ts';
 import {updateQueryVariable} from '../src/helpers/updateQueryVariable.ts';
 import {Filter} from '../src/types/filter.ts';
-import useFilterStore from '../src/reactiveVariablesStore/filterStore.ts';
+import useFilterStore from '../src/store/filterStore.ts';
 
 it('updateQueryVariable should return object with all data provided', async () => {
   const searchQueryMock = {

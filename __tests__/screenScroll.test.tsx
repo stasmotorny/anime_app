@@ -9,7 +9,7 @@ import {
 } from '../src/API/__generated__/graphql.ts';
 import {Provider} from 'react-native-paper';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import useFilterStore from '../src/reactiveVariablesStore/filterStore.ts';
+import useFilterStore from '../src/store/filterStore.ts';
 
 jest.useFakeTimers();
 

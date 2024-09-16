@@ -2,9 +2,9 @@ import React from 'react';
 import {Banner} from 'react-native-paper';
 import {MediaSort} from '../API/__generated__/graphql.ts';
 import {SurfaceWithChips} from './surfaceWithChips.tsx';
-import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
+import {chosenSortType} from '../store/choosenSortType.ts';
 import {useReactiveVar} from '@apollo/client';
-import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
+import useSortTyperStore from '../store/sortingTypeStore.ts';
 
 type Props = {
   isBannerVisible: boolean;

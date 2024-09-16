@@ -1,6 +1,6 @@
 import {Media, MediaType} from '../API/__generated__/graphql.ts';
 import {GroupedItems} from '../types/groupedItems.ts';
-import {CollectionItem} from '../reactiveVariablesStore/userCollectionStore.ts';
+import {CollectionItem} from '../store/userCollectionStore.ts';
 import {GroupedObject} from '../types/groupedObject.ts';
 
 export const groupItems = (items: Media[]) => {

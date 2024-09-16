@@ -12,7 +12,7 @@ import {ChangeGroupDialogue} from './changeGroupDialogue.tsx';
 import analytics from '@react-native-firebase/analytics';
 import {useAddItemInCollection} from '../API/addItemInCollection.ts';
 import {useRemoveItemFromCollection} from '../API/removeItemFromCollection.ts';
-import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
+import useCurrentScreenStore from '../store/currentScreenStore.ts';
 
 type Props = {
   item: Media;

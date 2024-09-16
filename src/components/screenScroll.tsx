@@ -8,10 +8,10 @@ import {ScreenLoadingSpinner} from './screenLoadingSpinner.tsx';
 import {ApolloError, useReactiveVar} from '@apollo/client';
 import {FlashList} from '@shopify/flash-list';
 import Error from '@tanstack/react-query';
-import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
-import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
-import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore.ts';
-import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
+import useFilterStore from '../store/filterStore.ts';
+import useSortTyperStore from '../store/sortingTypeStore.ts';
+import useUserCollectionStore from '../store/userCollectionStore.ts';
+import useCurrentScreenStore from '../store/currentScreenStore.ts';
 
 type Props = {
   fetchMore?: any;

@@ -10,7 +10,7 @@ import {ScrollView, StyleSheet} from 'react-native';
 // } from '../reactiveVariablesStore/userCollection.ts';
 import {GroupedItems} from '../types/groupedItems.ts';
 import {groupItems} from '../helpers/groupingItems.ts';
-import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore.ts';
+import useUserCollectionStore from '../store/userCollectionStore.ts';
 import {useAddItemInCollection} from '../API/addItemInCollection.ts';
 
 type Props = StackScreenProps<StackParamList, 'Choose_related_items'>;

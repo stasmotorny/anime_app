@@ -13,11 +13,11 @@ import {Colors} from '../colors/colors.ts';
 import {Groups} from '../components/groupedItems.tsx';
 import {GroupedObject} from '../types/groupedObject.ts';
 import {FormattedSchedule} from '../types/schedule.ts';
-import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore.ts';
+import useUserCollectionStore from '../store/userCollectionStore.ts';
 import {useGetDetailedCollection} from '../API/getDetailedCollection.ts';
-import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
-import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
-import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
+import useFilterStore from '../store/filterStore.ts';
+import useCurrentScreenStore from '../store/currentScreenStore.ts';
+import useSortTyperStore from '../store/sortingTypeStore.ts';
 
 export const Collection = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();

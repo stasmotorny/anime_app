@@ -1,6 +1,6 @@
 import axiosInstance from './axiosConfig';
 import {useQuery, keepPreviousData} from '@tanstack/react-query';
-import useUserStore from '../reactiveVariablesStore/userStore';
+import useUserStore from '../store/userStore';
 
 type GetDetailsQueryParams = {
   itemId: number;

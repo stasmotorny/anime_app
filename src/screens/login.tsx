@@ -6,9 +6,8 @@ import validator from 'validator';
 import type {StackScreenProps} from '@react-navigation/native-stack';
 import {StackParamList} from '../types/navigation.ts';
 import {Errors} from '../types/registrationErros.ts';
-import {loginWithEmailAndPassword, resetPassword} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
-import { useSignInUser } from '../API/signIn.ts';
+import {useSignInUser} from '../API/signIn.ts';
 
 type Props = StackScreenProps<StackParamList, 'Login'>;
 
@@ -21,7 +20,7 @@ const Login = (props: Props): React.JSX.Element => {
     passwordErrors: null,
   });
 
-  const { mutate, isLoading, isError } = useSignInUser();
+  const {mutate, isLoading, isError} = useSignInUser();
 
   const isButtonDisabled: boolean =
     email === '' ||
@@ -90,7 +89,9 @@ const Login = (props: Props): React.JSX.Element => {
         {email ? (
           <Button
             testID="ResetPasswordBtn"
-            onPress={() => resetPassword(email)}>
+            // TODO add reset password endpoint and functionality
+            // onPress={() => resetPassword(email)}>
+            onPress={() => {}}>
             Reset Password
           </Button>
         ) : null}
