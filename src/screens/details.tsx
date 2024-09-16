@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, ActivityIndicator} from 'react-native-paper';
 import {StackParamList} from '../types/navigation.ts';
 import {StackScreenProps} from '@react-navigation/stack';
-import {useGetDetailsQuery} from '../API/__generated__/graphql.ts';
+// import {useGetDetailsQuery} from '../API/__generated__/graphql.ts';
 import {StyleSheet, ScrollView} from 'react-native';
 import {Colors} from '../colors/colors.ts';
 import {RelationsList} from '../components/relationsList.tsx';
@@ -11,19 +11,18 @@ import {RatingBlock} from '../components/ratingBlock.tsx';
 import {Description} from '../components/description.tsx';
 import {GradientImageWithText} from '../components/gradientImageWithText.tsx';
 import {YoutubeTrailer} from '../components/youtubeTrailer.tsx';
+import {useGetDetails} from '../API/getItemDetails.ts';
 
 type Props = StackScreenProps<StackParamList, 'Details'>;
 
 export const Details = (props: Props) => {
   const {itemId} = props.route.params;
 
-  const {data, loading, error} = useGetDetailsQuery({
-    variables: {
-      id: itemId,
-    },
+  const {data, isLoading, isError} = useGetDetails({
+    itemId,
   });
 
-  if (loading) {
+  if (isLoading) {
     return (
       <ActivityIndicator
         testID="activity-indicator"
@@ -33,7 +32,7 @@ export const Details = (props: Props) => {
     );
   }
 
-  if (error || !data || !data.Media) {
+  if (isError || !data || !data.Media) {
     return (
       <Text variant="headlineSmall" style={styles.error}>
         Failed to load data

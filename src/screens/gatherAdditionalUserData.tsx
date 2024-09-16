@@ -1,17 +1,13 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
-import {gatherAdditionalUserData} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
 import SelectDropdown from 'react-native-select-dropdown';
 import DatePicker from 'react-native-date-picker';
-import {useReactiveVar} from '@apollo/client';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
 import moment from 'moment';
-import {isAdditionalDataGathered} from '../reactiveVariablesStore/isAdditionalDataGatered.ts';
 
 const GatherAdditionalUserData = (): React.JSX.Element => {
-  const user = useReactiveVar(UserData);
+  const user = {};
 
   const [gender, setGender] = useState<string | null>(null);
   const [birthDate, setBirthDate] = useState<Date | null>(null);
@@ -82,8 +78,8 @@ const GatherAdditionalUserData = (): React.JSX.Element => {
             disabled={!gender && !birthDate}
             style={styles.loginBtn}
             onPress={() => {
-              gatherAdditionalUserData(user!.user.uid, gender, birthDate);
-              isAdditionalDataGathered(true);
+              // gatherAdditionalUserData(user!.user.uid, gender, birthDate);
+              // isAdditionalDataGathered(true);
             }}>
             Save
           </Button>
@@ -92,8 +88,8 @@ const GatherAdditionalUserData = (): React.JSX.Element => {
             testID="CancelAdditionalUserDataBtn"
             style={styles.loginBtn}
             onPress={() => {
-              gatherAdditionalUserData(user!.user.uid, null, null);
-              isAdditionalDataGathered(true);
+              // gatherAdditionalUserData(user!.user.uid, null, null);
+              // isAdditionalDataGathered(true);
             }}>
             Cancel
           </Button>

@@ -3,18 +3,22 @@ import {List, Chip, Divider, Button, Surface} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {CollectionItem, StackParamList} from '../types/navigation.ts';
 import {ScrollView, StyleSheet} from 'react-native';
-import {useReactiveVar} from '@apollo/client';
-import {
-  addNewItemToDB,
-  userCollection,
-} from '../reactiveVariablesStore/userCollection.ts';
+// import {useReactiveVar} from '@apollo/client';
+// import {
+//   addNewItemToDB,
+//   userCollection,
+// } from '../reactiveVariablesStore/userCollection.ts';
 import {GroupedItems} from '../types/groupedItems.ts';
 import {groupItems} from '../helpers/groupingItems.ts';
+import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore.ts';
+import {useAddItemInCollection} from '../API/addItemInCollection.ts';
 
 type Props = StackScreenProps<StackParamList, 'Choose_related_items'>;
 
 export const RelatedItemsChoice = (props: Props) => {
-  const collection = useReactiveVar(userCollection);
+  // const collection = useReactiveVar(userCollection);
+  const {collection} = useUserCollectionStore();
+  const {mutate: addInCollection} = useAddItemInCollection();
 
   const {relatedItems, mainItem} = props.route.params;
   const navigation = props.navigation;
@@ -24,6 +28,14 @@ export const RelatedItemsChoice = (props: Props) => {
     manga: [],
   });
   const [selected, setSelected] = useState<CollectionItem[]>([mainItem]);
+
+  useEffect(() => {
+    console.log('MAIN_ITEM', mainItem);
+  }, [mainItem]);
+
+  useEffect(() => {
+    console.log('SLECTED', selected);
+  }, [selected]);
 
   useEffect(() => {
     // @ts-ignore
@@ -49,7 +61,7 @@ export const RelatedItemsChoice = (props: Props) => {
           {groupedItems.anime.map(item => {
             if (
               !collection.some(
-                collectionItem => item.id === collectionItem.itemId,
+                collectionItem => item.id === collectionItem.item_id,
               )
             ) {
               return (
@@ -79,7 +91,7 @@ export const RelatedItemsChoice = (props: Props) => {
           {groupedItems.manga.map(item => {
             if (
               !collection.some(
-                collectionItem => item.id === collectionItem.itemId,
+                collectionItem => item.id === collectionItem.item_id,
               )
             ) {
               return (
@@ -111,7 +123,8 @@ export const RelatedItemsChoice = (props: Props) => {
           disabled={selected.length === 1}
           style={styles.button}
           onPress={() => {
-            addNewItemToDB(selected);
+            // addNewItemToDB(selected);
+            addInCollection(selected);
             navigation.goBack();
           }}>
           Add
@@ -120,7 +133,8 @@ export const RelatedItemsChoice = (props: Props) => {
           mode="contained"
           style={styles.button}
           onPress={() => {
-            addNewItemToDB(mainItem);
+            // addNewItemToDB(mainItem);
+            addInCollection(mainItem);
             navigation.goBack();
           }}>
           Cancel

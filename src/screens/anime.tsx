@@ -1,26 +1,63 @@
-import React, {useState} from 'react';
-import {Media, useGetAnimeListQuery} from '../API/__generated__/graphql.ts';
-import {useReactiveVar} from '@apollo/client';
-import {filterState} from '../reactiveVariablesStore/filterState.ts';
-import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
-import {updateQueryVariable} from '../helpers/updateQueryVariable.ts';
-import {chosenSortType} from '../reactiveVariablesStore/choosenSortType.ts';
+import React, {useState, useEffect, useRef} from 'react';
+import {Media} from '../API/__generated__/graphql.ts';
 import {ScreenScroll} from '../components/screenScroll.tsx';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
-import GatherAdditionalUserData from './gatherAdditionalUserData.tsx';
-import {isAdditionalDataGathered} from '../reactiveVariablesStore/isAdditionalDataGatered.ts';
+import {useGetAnime} from '../API/getAnime.ts';
+import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
+import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
+import {FlashList} from '@shopify/flash-list';
 
 export const Anime = (): React.JSX.Element => {
-  const searchQuery = useReactiveVar(filterState);
-  const sortType = useReactiveVar(chosenSortType);
-  const screen = useReactiveVar(currentScreen);
-  const user = useReactiveVar(UserData);
-  const isGathered = useReactiveVar(isAdditionalDataGathered);
+  const [media, setMedia] = useState<Media[]>([]);
+  const {
+    name,
+    genre,
+    startDateGreater,
+    status,
+    startDateLesser,
+    page,
+    setPage,
+  } = useFilterStore();
+  const {sortType} = useSortTyperStore();
+  const scrollRef = useRef<FlashList<Media>>(null);
 
-  const {data, loading, error, fetchMore} = useGetAnimeListQuery({
-    variables: updateQueryVariable(searchQuery, sortType),
-    skip: screen !== 'Anime',
-  });
+  let params: any = {
+    page,
+    sortType,
+    ...(name && {name}),
+    ...(genre && {genre}),
+    ...(startDateGreater && {startDateGreater}),
+    ...(status && {status}),
+    ...(startDateLesser && {startDateLesser}),
+  };
+
+  useEffect(() => {
+    if (scrollRef?.current?.scrollToOffset) {
+      scrollRef?.current?.scrollToOffset({animated: false, offset: 0});
+    }
+    if (page !== 1) {
+      setPage(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, genre, startDateGreater, status, startDateLesser, sortType]);
+
+  const {
+    data: queryData,
+    isLoading,
+    isPending,
+    isError,
+    error,
+  } = useGetAnime(params);
+
+  useEffect(() => {
+    if (queryData) {
+      if (page === 1) {
+        setMedia(queryData.Page.media);
+      } else {
+        setMedia([...media, ...queryData.Page.media]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryData, isPending]);
 
   // return user?.additionalUserInfo?.isNewUser && !isGathered ? (
   //   <GatherAdditionalUserData />
@@ -34,10 +71,10 @@ export const Anime = (): React.JSX.Element => {
   // );
   return (
     <ScreenScroll
-      data={data?.Page?.media as Media[]}
-      fetchMore={fetchMore}
+      ref={scrollRef}
+      data={media as Media[]}
       error={error}
-      loading={loading}
+      loading={isLoading}
     />
   );
 };

@@ -6,12 +6,9 @@ import {
   RadioButton,
 } from 'react-native-paper';
 import React, {useState, useRef} from 'react';
-import {useReactiveVar} from '@apollo/client';
-import {
-  changeItemGroup,
-  userCollection,
-} from '../reactiveVariablesStore/userCollection.ts';
 import {ScrollView, TextInput as RNTextInput} from 'react-native';
+import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore';
+import {useChangeCollectionItemGroup} from '../API/changeCollectionItemGroup';
 
 type Props = {
   isVisible: boolean;
@@ -21,16 +18,17 @@ type Props = {
 
 export const ChangeGroupDialogue = (props: Props) => {
   const {isVisible, setIsVisible, itemId} = props;
+  const {mutate: changeItemGroup} = useChangeCollectionItemGroup();
 
   const inputRef = useRef<RNTextInput>(null);
 
   const [textInputValue, setTextInputValue] = useState('');
   const [radioBtnValue, setRadioBtnValue] = useState('');
 
-  const userCollectionFromStore = useReactiveVar(userCollection);
+  const {collection: userCollectionFromStore} = useUserCollectionStore();
 
   const userGroupsArray = [
-    ...new Set(userCollectionFromStore.map(item => item.itemGroup)),
+    ...new Set(userCollectionFromStore.map(item => item.item_group)),
   ];
 
   const onRadioBtnPress = (value: string) => {
@@ -52,8 +50,9 @@ export const ChangeGroupDialogue = (props: Props) => {
   };
 
   const onConfirmPress = () => {
+    console.log('ON_CONFIRM_PRESS_FIRED');
     const newGroup = textInputValue || radioBtnValue;
-    changeItemGroup(itemId, newGroup);
+    changeItemGroup({itemId, newGroup});
   };
 
   return (

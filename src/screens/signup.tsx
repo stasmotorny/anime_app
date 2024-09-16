@@ -5,6 +5,7 @@ import validator from 'validator';
 import {Errors} from '../types/registrationErros.ts';
 import {signupWithEmailAndPassword} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
+import {useSignUpUser} from '../API/signUp.ts';
 
 const SignUp = (): React.JSX.Element => {
   const [email, setEmail] = useState<string>('');
@@ -16,6 +17,8 @@ const SignUp = (): React.JSX.Element => {
     passwordErrors: null,
     passwordConfirmationError: null,
   });
+
+  const { mutate, isLoading, isError } = useSignUpUser();
 
   const isButtonDisabled: boolean =
     email === '' ||
@@ -95,7 +98,8 @@ const SignUp = (): React.JSX.Element => {
           style={styles.loginBtn}
           onPress={() => {
             console.log('BTN_WAS_PRESSED');
-            signupWithEmailAndPassword(email, password, setErrors);
+            mutate({email, password});
+            // signupWithEmailAndPassword(email, password, setErrors);
           }}
           disabled={isButtonDisabled}>
           Sign Up

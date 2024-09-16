@@ -8,6 +8,7 @@ import {StackParamList} from '../types/navigation.ts';
 import {Errors} from '../types/registrationErros.ts';
 import {loginWithEmailAndPassword, resetPassword} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
+import { useSignInUser } from '../API/signIn.ts';
 
 type Props = StackScreenProps<StackParamList, 'Login'>;
 
@@ -19,6 +20,8 @@ const Login = (props: Props): React.JSX.Element => {
     emailErrors: null,
     passwordErrors: null,
   });
+
+  const { mutate, isLoading, isError } = useSignInUser();
 
   const isButtonDisabled: boolean =
     email === '' ||
@@ -73,7 +76,8 @@ const Login = (props: Props): React.JSX.Element => {
           style={styles.loginBtn}
           onPress={() => {
             console.log('BTN_WAS_PRESSED');
-            loginWithEmailAndPassword(email, password, setErrors);
+            // loginWithEmailAndPassword(email, password, setErrors);
+            mutate({email, password});
           }}
           disabled={isButtonDisabled}>
           Login

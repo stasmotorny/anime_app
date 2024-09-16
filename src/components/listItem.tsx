@@ -7,15 +7,12 @@ import {StackParamList} from '../types/navigation.ts';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {Colors} from '../colors/colors.ts';
 import {statusTitles} from '../helpers/enumFormatters.ts';
-import {useReactiveVar} from '@apollo/client';
-import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
-import {
-  addNewItemToDB,
-  removeItemFromDB,
-} from '../reactiveVariablesStore/userCollection.ts';
 import {AddRelatedItemsDialogue} from './addRelatedItemsDialogue.tsx';
 import {ChangeGroupDialogue} from './changeGroupDialogue.tsx';
 import analytics from '@react-native-firebase/analytics';
+import {useAddItemInCollection} from '../API/addItemInCollection.ts';
+import {useRemoveItemFromCollection} from '../API/removeItemFromCollection.ts';
+import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
 
 type Props = {
   item: Media;
@@ -23,16 +20,18 @@ type Props = {
 };
 
 export const ListItem = ({item, isInCollection}: Props) => {
-  const screen = useReactiveVar(currentScreen);
+  const {currentScreen: screen} = useCurrentScreenStore();
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const [isVisible, setIsVisible] = useState(false);
   const [isGroupChangeVisible, setIsGroupChangeVisible] = useState(false);
+  const { mutate: addInCollection, isLoading, isError } = useAddItemInCollection();
+  const {mutate: removeFromCollection} = useRemoveItemFromCollection();
 
   const addRelatedItemsDialogue = (relatedItems: Media[]) => {
     if (relatedItems) {
       setIsVisible(true);
     } else {
-      addNewItemToDB({
+      addInCollection({
         itemId: item.id,
         itemGroup: item.type!,
       });
@@ -75,7 +74,7 @@ export const ListItem = ({item, isInCollection}: Props) => {
           <Button
             testID="remove_button"
             onPress={async () => {
-              removeItemFromDB(item.id);
+              removeFromCollection({itemId: item.id});
               await analytics().logEvent('Remove_item', {
                 id: item.id,
                 name: item.title?.english,

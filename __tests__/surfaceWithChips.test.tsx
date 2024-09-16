@@ -12,7 +12,6 @@ const mockedData = {
 };
 
 it('Should increase page on scroll reached end', () => {
-  const fetchMore = jest.fn();
   const wrapper = render(
     <SurfaceWithChips
       itemsArray={mockedData.itemsArray}

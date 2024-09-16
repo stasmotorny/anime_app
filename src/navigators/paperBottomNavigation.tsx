@@ -9,21 +9,14 @@ import {
 import {Anime} from '../screens/anime.tsx';
 import {Manga} from '../screens/manga.tsx';
 import {Collection} from '../screens/collection.tsx';
-import {getAdditionalUserData, signOut} from '../helpers/auth.ts';
 import {Colors} from '../colors/colors.ts';
 import {StyleSheet} from 'react-native';
 import {Search} from '../components/search.tsx';
-import {useReactiveVar} from '@apollo/client';
-import {
-  filterState,
-  initialFilterState,
-} from '../reactiveVariablesStore/filterState.ts';
-import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
 import {Sort} from '../components/sort.tsx';
-import firestore from '@react-native-firebase/firestore';
-import {userCollection} from '../reactiveVariablesStore/userCollection.ts';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {UserData} from '../reactiveVariablesStore/userAuthState.ts';
+import useUserStore from '../reactiveVariablesStore/userStore.ts';
+import {useGetCollection} from '../API/getCollection.ts';
+import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
+import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
 
 type RenderSceneArgument = {
   route: {
@@ -34,8 +27,25 @@ type RenderSceneArgument = {
 };
 
 const PaperBottomNavigation = () => {
-  const user = useReactiveVar(UserData);
-  const searchQuery = useReactiveVar(filterState);
+  const {name, genre, startDateGreater, startDateLesser, status, resetFilter} = useFilterStore();
+  const {userTokenId, resetUser} = useUserStore();
+  const {mutate} = useGetCollection();
+  const {setCurrentScreen} = useCurrentScreenStore();
+
+  const searchQuery: {[key: string]: string} = {
+    name,
+    genre,
+    startDateGreater,
+    startDateLesser,
+    status,
+  };
+
+  useEffect(() => {
+    if (userTokenId) {
+      console.log('BAM');
+      mutate();
+    }
+  }, []);
 
   const [index, setIndex] = useState(0);
 
@@ -53,41 +63,9 @@ const PaperBottomNavigation = () => {
 
   const [isSortVisible, setIsSortVisible] = useState(false);
 
-  if (user) {
-    getAdditionalUserData(user.user.uid);
-  }
-
-  let firestoreSubscriber: () => void;
-
-  const onAuthStateChanged = (firebaseUser: FirebaseAuthTypes.User | null) => {
-    if (firebaseUser && firebaseUser.uid) {
-      firestoreSubscriber = firestore()
-        .collection('userCollection')
-        .doc(firebaseUser.uid)
-        .onSnapshot(
-          documentSnapshot => {
-            userCollection(documentSnapshot.data()!.collection);
-          },
-          error => console.error(error),
-        );
-    }
-
-    if (!firebaseUser && firestoreSubscriber) {
-      firestoreSubscriber();
-    }
-  };
-
-  useEffect(() => {
-    const authSubscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return authSubscriber;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // const renderScene = BottomNavigation.SceneMap({
-  //   anime: Anime,
-  //   manga: Manga,
-  //   collection: Collection,
-  // });
+  // if (user) {
+  //   getAdditionalUserData(user.user.uid);
+  // }
 
   const renderScene = ({route}: RenderSceneArgument) => {
     if (routes[index].key !== route.key) {
@@ -136,7 +114,7 @@ const PaperBottomNavigation = () => {
         </Surface>
         <Appbar.Action
           icon="logout"
-          onPress={() => signOut()}
+          onPress={() => resetUser()}
           color={iconColor}
         />
       </Appbar.Header>
@@ -150,8 +128,8 @@ const PaperBottomNavigation = () => {
         navigationState={{index, routes}}
         onIndexChange={val => {
           setIndex(val);
-          filterState(initialFilterState);
-          currentScreen(routes[val].title);
+          resetFilter();
+          setCurrentScreen(routes[val].title as 'Anime' | 'Manga' | 'Collection');
         }}
         renderScene={renderScene}
         sceneAnimationEnabled={true}
