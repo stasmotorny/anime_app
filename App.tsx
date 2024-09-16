@@ -12,10 +12,10 @@ import {Calendar} from './src/screens/calendar.tsx';
 import {RelatedItemsChoice} from './src/screens/relatedItemsChoice.tsx';
 import Crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
-import {isAdditionalDataGathered} from './src/reactiveVariablesStore/isAdditionalDataGatered.ts';
+import {isAdditionalDataGathered} from './src/store/isAdditionalDataGatered.ts';
 import GatherAdditionalUserData from './src/screens/gatherAdditionalUserData.tsx';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import useUserStore from './src/reactiveVariablesStore/userStore.ts';
+import useUserStore from './src/store/userStore.ts';
 
 const Stack = createStackNavigator<StackParamList>();
 const queryClient = new QueryClient();

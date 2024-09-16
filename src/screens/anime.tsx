@@ -2,8 +2,8 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Media} from '../API/__generated__/graphql.ts';
 import {ScreenScroll} from '../components/screenScroll.tsx';
 import {useGetAnime} from '../API/getAnime.ts';
-import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
-import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
+import useFilterStore from '../store/filterStore.ts';
+import useSortTyperStore from '../store/sortingTypeStore.ts';
 import {FlashList} from '@shopify/flash-list';
 
 export const Anime = (): React.JSX.Element => {

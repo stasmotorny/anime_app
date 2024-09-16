@@ -1,7 +1,7 @@
 import axiosInstance from './axiosConfig';
 import {useMutation} from '@tanstack/react-query';
-import useUserStore from '../reactiveVariablesStore/userStore';
-import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore';
+import useUserStore from '../store/userStore';
+import useUserCollectionStore from '../store/userCollectionStore';
 import {CollectionItem} from '../types/navigation';
 import {isArray} from 'lodash';
 

@@ -1,8 +1,8 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {Media} from '../API/__generated__/graphql.ts';
 import {ScreenScroll} from '../components/screenScroll.tsx';
-import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
-import useSortTyperStore from '../reactiveVariablesStore/sortingTypeStore.ts';
+import useFilterStore from '../store/filterStore.ts';
+import useSortTyperStore from '../store/sortingTypeStore.ts';
 import {useGetManga} from '../API/getManga.ts';
 import { FlashList } from '@shopify/flash-list';
 

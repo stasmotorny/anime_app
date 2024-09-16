@@ -3,7 +3,7 @@ import {render, waitFor} from '@testing-library/react-native';
 import {Anime} from '../src/screens/anime.tsx';
 import {it, expect, jest, afterEach, beforeAll} from '@jest/globals';
 import {MockedNavigator} from './__mocks__/mocks.tsx';
-import useCurrentScreenStore from '../src/reactiveVariablesStore/currentScreenStore.ts';
+import useCurrentScreenStore from '../src/store/currentScreenStore.ts';
 import axiosInstance from '../src/API/axiosConfig.ts';
 import MockAdapter from 'axios-mock-adapter';
 

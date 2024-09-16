@@ -7,9 +7,9 @@ import {useReactiveVar} from '@apollo/client';
 import {RangeSliderComponent} from './rangeSlider.tsx';
 import {SurfaceWithChips} from './surfaceWithChips.tsx';
 import debounce from 'lodash.debounce';
-import {currentScreen} from '../reactiveVariablesStore/currentScreen.ts';
-import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
-import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
+import {currentScreen} from '../store/currentScreen.ts';
+import useFilterStore from '../store/filterStore.ts';
+import useCurrentScreenStore from '../store/currentScreenStore.ts';
 
 type Props = {
   isDialogueVisible: boolean;

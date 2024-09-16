@@ -1,8 +1,8 @@
 import axiosInstance from './axiosConfig';
 import { useQuery, keepPreviousData, useMutation } from '@tanstack/react-query';
-import useUserStore from '../reactiveVariablesStore/userStore';
+import useUserStore from '../store/userStore';
 import { MediaSort, MediaStatus } from '../API/__generated__/graphql';
-import useUserCollectionStore from '../reactiveVariablesStore/userCollectionStore';
+import useUserCollectionStore from '../store/userCollectionStore';
 
 type CollectionItem = {
   itemId: number;

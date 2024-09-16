@@ -24,15 +24,3 @@ jest.mock('react-native-youtube-iframe', () => 'YoutubePlayer');
 
 // Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
-
-jest.mock('@react-native-firebase/auth', () => {
-  return {
-    auth: jest.fn(() => {
-      return {
-        createUserWithEmailAndPassword: jest.fn(),
-        signInWithEmailAndPassword: jest.fn(),
-        signOut: jest.fn(),
-      };
-    }),
-  };
-});

@@ -13,10 +13,10 @@ import {Colors} from '../colors/colors.ts';
 import {StyleSheet} from 'react-native';
 import {Search} from '../components/search.tsx';
 import {Sort} from '../components/sort.tsx';
-import useUserStore from '../reactiveVariablesStore/userStore.ts';
+import useUserStore from '../store/userStore.ts';
 import {useGetCollection} from '../API/getCollection.ts';
-import useCurrentScreenStore from '../reactiveVariablesStore/currentScreenStore.ts';
-import useFilterStore from '../reactiveVariablesStore/filterStore.ts';
+import useCurrentScreenStore from '../store/currentScreenStore.ts';
+import useFilterStore from '../store/filterStore.ts';
 
 type RenderSceneArgument = {
   route: {
